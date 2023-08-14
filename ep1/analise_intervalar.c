@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <math.h> // INFINITY, -INFINITY
 
+// float nextafterf(float x, float y); retorna o proximo float depois de x na direção de y
+//     ou seja:
+//     nextafterf(x, INFINITY)  retorna o menor float maior que x
+//     nextafterf(x, -INFINITY) retorna o maior float menor que x
+
 typedef struct Intervalo {
     float a, b;
 } Intervalo;
