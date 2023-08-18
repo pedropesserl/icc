@@ -9,9 +9,9 @@
 //     nextafterf(x, INFINITY)  retorna o menor float maior que x
 //     nextafterf(x, -INFINITY) retorna o maior float menor que x
 
-#define MIN2(a, b) ((a) < (b) ? (a) : (b))
+#define MIN2(a, b)       ((a) < (b) ? (a) : (b))
 #define MIN4(a, b, c, d) (MIN2(MIN2(MIN2(a, b), c), d))
-#define MAX2(a, b) ((a) > (b) ? (a) : (b))
+#define MAX2(a, b)       ((a) > (b) ? (a) : (b))
 #define MAX4(a, b, c, d) (MAX2(MAX2(MAX2(a, b), c), d))
 
 #define INTERFMT "[%1.8e , %1.8e]"
