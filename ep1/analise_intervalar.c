@@ -58,6 +58,20 @@ Inter_t div_inter(Inter_t a, Inter_t b) {
     return div;
 }
 
+int calcula_ulps(Inter_t f) {
+    int ulps = 0;
+    if (INTREP(f.up) == INTREP(f.lo)) // são o mesmo número
+        return ulps;
+    int lo = INTREP(f.lo) & ~(1<<31); // desligando MSB
+    int up = INTREP(f.up) & ~(1<<31);
+    if ((INTREP(f.up) >> 31) != (INTREP(f.lo) >> 31)) { // um é positivo e o outro é negativo
+        ulps = up + lo - 1;
+    } else {
+        ulps = abs(up - lo) - 1;
+    }
+    return ulps;
+}
+
 int main() {
     fesetround(FE_DOWNWARD);
     Inter_t operandos[1024] = {0};
@@ -108,9 +122,7 @@ int main() {
         printf(INTERFMT"\n", FMTINTER(result));
         float ea = fabs(result.up - result.lo);
         float er = ea / result.lo;
-        int ulps = abs(INTREP(result.up) - INTREP(result.lo)) - 1;
-        if (INTREP(result.up) == INTREP(result.lo)) // se forem iguais, ulps vai ser -1
-            ulps += 1;
+        int ulps = calcula_ulps(result);
         printf("EA: %1.8e; ER: %1.8e, ULPs: %d\n\n", ea, er, ulps);
 
         operandos[j+1] = result;
