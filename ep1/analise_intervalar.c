@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <float.h>
 #include <math.h> // INFINITY, -INFINITY, nextaftert
+#include <fenv.h>
 
 // float nextafterf(float x, float y); retorna o proximo float depois de x na direção de y
 //     ou seja:
@@ -37,15 +39,6 @@ Inter_t sub_inter(Inter_t a, Inter_t b) {
 
 Inter_t mult_inter(Inter_t a, Inter_t b) {
     Inter_t mult;
-    /* printf("a.lo: %x\n", INTREP(a.lo)); */
-    /* printf("a.up: %x\n", INTREP(a.up)); */
-    /* printf("b.lo: %x\n", INTREP(b.lo)); */
-    /* printf("b.up: %x\n", INTREP(b.up)); */
-    /* float ll = a.lo*b.lo, lu = a.lo*b.up, ul = a.up*b.lo, uu = a.up*b.up; */
-    /* printf("%1.8e, %x\n", ll, INTREP(ll)); */
-    /* printf("%1.8e, %x\n", lu, INTREP(lu)); */
-    /* printf("%1.8e, %x\n", ul, INTREP(ul)); */
-    /* printf("%1.8e, %x\n", uu, INTREP(uu)); */
     mult.lo = MIN4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up);
     mult.up = MAX4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up);
     return mult;
@@ -66,6 +59,7 @@ Inter_t div_inter(Inter_t a, Inter_t b) {
 }
 
 int main() {
+    fesetround(FE_DOWNWARD);
     Inter_t operandos[1024] = {0};
     char operadores[1024] = {0};
 
@@ -103,12 +97,20 @@ int main() {
                 fprintf(stderr, "Operador inválido inserido: %c.\n", op);
                 return 1;
         }
+
+        // se os extremos do resultado são iguais, ou seja, ele não é representável,
+        // aumentamos o valor do extremo maior
+        if (INTREP(result.lo) == INTREP(result.up)) 
+            result.up = nextafterf(result.up, INFINITY);
+
         printf("%d:\n", j+1);
         printf(INTERFMT" %c "INTERFMT" =\n", FMTINTER(operandos[j]), op, FMTINTER(operandos[j+1]));
         printf(INTERFMT"\n", FMTINTER(result));
         float ea = fabs(result.up - result.lo);
         float er = ea / result.lo;
-        int ulps = abs(INTREP(result.up) - INTREP(result.lo));
+        int ulps = abs(INTREP(result.up) - INTREP(result.lo)) - 1;
+        if (INTREP(result.up) == INTREP(result.lo)) // se forem iguais, ulps vai ser -1
+            ulps += 1;
         printf("EA: %1.8e; ER: %1.8e, ULPs: %d\n\n", ea, er, ulps);
 
         operandos[j+1] = result;
