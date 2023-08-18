@@ -7,9 +7,9 @@
 //     nextafterf(x, INFINITY)  retorna o menor float maior que x
 //     nextafterf(x, -INFINITY) retorna o maior float menor que x
 
-#define MIN2(a,b) ((a) < (b) ? (a) : (b))
+#define MIN2(a, b) ((a) < (b) ? (a) : (b))
 #define MIN4(a, b, c, d) (MIN2(MIN2(MIN2(a, b), c), d))
-#define MAX2(a,b) ((a) > (b) ? (a) : (b))
+#define MAX2(a, b) ((a) > (b) ? (a) : (b))
 #define MAX4(a, b, c, d) (MAX2(MAX2(MAX2(a, b), c), d))
 
 #define INTERFMT "[%1.8e , %1.8e]"
@@ -37,6 +37,15 @@ Inter_t sub_inter(Inter_t a, Inter_t b) {
 
 Inter_t mult_inter(Inter_t a, Inter_t b) {
     Inter_t mult;
+    /* printf("a.lo: %x\n", INTREP(a.lo)); */
+    /* printf("a.up: %x\n", INTREP(a.up)); */
+    /* printf("b.lo: %x\n", INTREP(b.lo)); */
+    /* printf("b.up: %x\n", INTREP(b.up)); */
+    /* float ll = a.lo*b.lo, lu = a.lo*b.up, ul = a.up*b.lo, uu = a.up*b.up; */
+    /* printf("%1.8e, %x\n", ll, INTREP(ll)); */
+    /* printf("%1.8e, %x\n", lu, INTREP(lu)); */
+    /* printf("%1.8e, %x\n", ul, INTREP(ul)); */
+    /* printf("%1.8e, %x\n", uu, INTREP(uu)); */
     mult.lo = MIN4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up);
     mult.up = MAX4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up);
     return mult;
@@ -44,7 +53,7 @@ Inter_t mult_inter(Inter_t a, Inter_t b) {
 
 Inter_t div_inter(Inter_t a, Inter_t b) {
     Inter_t div;
-    if (b.lo <= 0 && b.up >= 0) { // intervalo b contém 0
+    if (b.lo <= 0 && 0 <= b.up) { // intervalo b contém 0
         div.lo = -INFINITY;
         div.up = INFINITY;
         return div;
@@ -69,7 +78,7 @@ int main() {
             break;
     }
 
-    if (operadores[i-1] != '\0') {
+    if (i < 2 || operadores[i-1] != '\0') {
         fprintf(stderr, "Digite um número apropriado de operandos e operadores.\n");
         return 1;
     }
@@ -92,7 +101,7 @@ int main() {
                 break;
             default:
                 fprintf(stderr, "Operador inválido inserido: %c.\n", op);
-                exit(1);
+                return 1;
         }
         printf("%d:\n", j+1);
         printf(INTERFMT" %c "INTERFMT" =\n", FMTINTER(operandos[j]), op, FMTINTER(operandos[j+1]));
