@@ -1,10 +1,10 @@
-CC= gcc
-LIKWID_HOME= /home/soft/likwid
-CFLAGS= -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native
-LFLAGS= -L$(LIKWID_HOME)/lib -llikwid
+CC = gcc
+LIKWID_HOME = /home/soft/likwid
+CFLAGS = -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native -Wall -Wextra -g
+LFLAGS = -L$(LIKWID_HOME)/lib -llikwid
 
 all: sistemas_lineares.c
-	$(CC) $(CFLAGS) sistemas_lineares.c -o sistemas_lineares $(LFALGS)
+	$(CC) $(CFLAGS) sistemas_lineares.c -o perfEG $(LFLAGS)
 
 run:
 	echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
