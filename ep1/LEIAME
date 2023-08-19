@@ -5,3 +5,6 @@ Limitações encontradas:
 No caso de subtrair um número muito pequeno de um muito grande:
 [1.09999995e+10 , 1.10000015e+10] - [7.49998760e-40 , 7.50001563e-40], percebemos
 que o resultado não se alterou; isto é, o resultado foi [1.09999995e+10 , 1.10000015e+10].
+
+OBS: O programa pode ler qualquer quantidade de números para realizar operações. Para
+terminar a entrada, é necessário um EOF (Ctrl + D ou redirecionar a entrada de um arquivo).

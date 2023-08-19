@@ -59,17 +59,13 @@ Inter_t div_inter(Inter_t a, Inter_t b) {
 }
 
 int calcula_ulps(Inter_t f) {
-    int ulps = 0;
     if (INTREP(f.up) == INTREP(f.lo)) // são o mesmo número
-        return ulps;
+        return 0;
     int lo = INTREP(f.lo) & ~(1<<31); // desligando MSB
     int up = INTREP(f.up) & ~(1<<31);
-    if ((INTREP(f.up) >> 31) != (INTREP(f.lo) >> 31)) { // um é positivo e o outro é negativo
-        ulps = up + lo - 1;
-    } else {
-        ulps = abs(up - lo) - 1;
-    }
-    return ulps;
+    if ((INTREP(f.up) >> 31) != (INTREP(f.lo) >> 31)) // um é positivo e o outro é negativo
+        return up + lo - 1;
+    return abs(up - lo) - 1;
 }
 
 int main() {
