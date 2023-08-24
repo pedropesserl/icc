@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MEM_ERR() do {                                                                              \
+#define MEM_ERR do {                                                                                \
         fprintf(stderr, "Erro de alocação de memória: %s:%d (%s)\n", __FILE__, __LINE__, __func__); \
         exit(1);                                                                                    \
     } while (0)
