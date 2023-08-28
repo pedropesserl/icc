@@ -52,24 +52,31 @@ void destroi_sistema(struct Sistema s) {
 }
 
 void retrosub(struct Sistema s) {
+    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    exit(1);
     for (size_t i = s.tam-1; i >= 0; i--) {
         s.X[i] = s.B[i];
         for (size_t j = i+1; j < s.tam; j++)
             s.X[i] -= s.A[i][j];
-        perror("TERMINAR FUNÇÃO retrosub()");
     }
 }
 
 void pivoteamento(struct Sistema s) {
-
+    (void)s;
+    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    exit(1);
 }
 
 void pivoteamento_sem_mult(struct Sistema s) {
-
+    (void)s;
+    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    exit(1);
 }
 
 void sem_pivoteamento(struct Sistema s) {
-
+    (void)s;
+    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    exit(1);
 }
 
 int main() {
