@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <float.h>
+#include <math.h>
 
 #define MEM_ERR do {                                                                                \
         fprintf(stderr, "Erro de alocação de memória: %s:%d (%s)\n", __FILE__, __LINE__, __func__); \
@@ -12,6 +14,7 @@ struct Sistema {
     double *B;
     double *X;
     size_t tam;
+    int solucao_unica;
 };
 
 double **cria_matriz(size_t tam, double *data) {
@@ -25,6 +28,7 @@ double **cria_matriz(size_t tam, double *data) {
 
 struct Sistema cria_sistema(size_t tam) {
     struct Sistema s;
+    s.solucao_unica = -1;
     s.tam = tam;
     s.data = (double*)calloc(tam*tam, sizeof(double));
     if (!s.data)
@@ -52,30 +56,35 @@ void destroi_sistema(struct Sistema s) {
 }
 
 void retrosub(struct Sistema s) {
-    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
-    exit(1);
-    for (size_t i = s.tam-1; i >= 0; i--) {
+    for (int i = s.tam-1; i >= 0; i--) {
         s.X[i] = s.B[i];
-        for (size_t j = i+1; j < s.tam; j++)
-            s.X[i] -= s.A[i][j];
+        for (int j = i+1; (size_t)j < s.tam; j++)
+            s.X[i] -= s.A[i][j] * s.X[j];
+        if (fabs(s.A[i][i]) >= DBL_EPSILON) { // s.A[i][i] != 0
+            s.X[i] /= s.A[i][i];
+        } else {
+            s.solucao_unica = 0;
+            return;
+        }
     }
+    s.solucao_unica = 1;
 }
 
 void pivoteamento(struct Sistema s) {
     (void)s;
-    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
     exit(1);
 }
 
 void pivoteamento_sem_mult(struct Sistema s) {
     (void)s;
-    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
     exit(1);
 }
 
 void sem_pivoteamento(struct Sistema s) {
     (void)s;
-    fprintf("%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
     exit(1);
 }
 
