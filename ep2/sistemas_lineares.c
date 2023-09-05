@@ -89,16 +89,74 @@ void sem_pivoteamento(struct Sistema *s) {
     exit(1);
 }
 
-void imprime_solucao(struct Sistema s) {
-    if (s.solucao_unica != 1) {
+// retorna linha com maior valor em módulo na coluna linha_pivo na qual i <= linha_pivo
+size_t find_max(struct Sistema *s, size_t linha_pivo) {
+    double max = 0;
+    size_t id_max = 0;
+    if (!s || linha_pivo > s->ordem)
+        return 0;
+       
+    if (linha_pivo == s->ordem - 1) // Se tiver apenas um elemento nas
+        return linha_pivo;          //linhas de baixos de linha_pivo
+
+    for (size_t i = linha_pivo; i < s->ordem; i++) {
+        if (fabs(s->A[i][linha_pivo]) > max) {
+            max = fabs(s->A[i][linha_pivo]);
+            id_max = i;
+        }
+    }
+
+    return id_max;
+}
+
+// retorna 1 se tudo ocorrer corretamente
+int troca_linha(struct Sistema *s, size_t linha1, size_t linha2) {
+    double *tmp;
+
+    if (!s || linha1 > s->ordem || linha2 > s->ordem)
+        return 0;
+    
+    if (linha1 == linha2) // nao trocar se for a memsa linha
+        return 1;
+
+    tmp = s->A[linha1];
+    s->A[linha1] = s->A[linha2];
+    s->A[linha2] = tmp;
+
+    double tmp2;
+    tmp2 = s->B[linha1];
+    s->B[linha1] = s->B[linha2];
+    s->B[linha2] = tmp2;
+
+    return 1;
+}
+
+void imprime_solucao(struct Sistema *s) {
+    if (s->solucao_unica != 1) {
         printf("O sistema não possui solução única.\n");
         return;
     }
     printf("X = [ ");
-    for (size_t i = 0; i < s.ordem; i++) {
-        printf("%.5lf ", s.X[i]);
+    for (size_t i = 0; i < s->ordem; i++) {
+        printf("%.5lf ", s->X[i]);
     }
     printf("]\n");
+}
+
+void imprime_sistema(struct Sistema *s) {
+    printf("    ┏\n");
+    for (size_t i = 0; i < s->ordem; i++) {
+        if (i == s->ordem/2)
+            printf("A = ┃ ");
+        else
+            printf("    ┃ ");
+        
+        for (size_t j = 0; j < s->ordem; j++) {
+            printf("%.5lf ", s->A[i][j]);
+        }
+        printf("   %.5lf\n", s->B[i]);
+    }
+    printf("    ┗\n");
 }
 
 int main() {
@@ -108,7 +166,7 @@ int main() {
     struct Sistema s = cria_sistema(ordem);
 
     retrosub(&s);
-    imprime_solucao(s);
+    imprime_solucao(&s);
 
     destroi_sistema(&s);
     return 0;
