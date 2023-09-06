@@ -14,6 +14,7 @@ struct Sistema {
     double **A;
     double *B;
     double *X;
+    double *R;
     size_t ordem;
     int solucao_unica;
 };
@@ -29,7 +30,7 @@ double **cria_matriz(size_t tam, double *data) {
 
 struct Sistema cria_sistema(size_t ordem) {
     struct Sistema s;
-    s.solucao_unica = -1;
+    s.solucao_unica = 0;
     s.ordem = ordem;
     s.data = (double*)calloc(ordem*ordem, sizeof(double));
     if (!s.data)
@@ -39,6 +40,9 @@ struct Sistema cria_sistema(size_t ordem) {
         MEM_ERR;
     s.X = (double*)calloc(ordem, sizeof(double));
     if (!s.X)
+        MEM_ERR;
+    s.R = (double*)calloc(ordem, sizeof(double));
+    if (!s.R)
         MEM_ERR;
     for (size_t i = 0; i < ordem; i++) {
         for (size_t j = 0; j < ordem; j++)
@@ -69,6 +73,20 @@ void retrosub(struct Sistema *s) {
         }
     }
     s->solucao_unica = 1;
+}
+
+void calcula_residuo(struct Sistema *s) {
+    if (!s || !s->solucao_unica)
+        return;
+
+    double acc_linha = 0.0;
+    for (size_t i = 0; i < s->ordem; i++) {
+        acc_linha = 0.0;
+        for (size_t j = 0; j < s->ordem; j++)
+            acc_linha += s->A[i][j] * s->X[j];
+
+        s->R[i] = acc_linha - s->B[i];
+    }
 }
 
 // retorna linha com maior valor em módulo na coluna linha_pivo na qual i <= linha_pivo
@@ -114,13 +132,24 @@ int troca_linha(struct Sistema *s, size_t linha1, size_t linha2) {
 }
 
 void imprime_solucao(struct Sistema *s) {
-    if (s->solucao_unica != 1) {
+    if (!s->solucao_unica) {
         printf("O sistema não possui solução única.\n");
         return;
     }
     printf("X = [ ");
     for (size_t i = 0; i < s->ordem; i++) {
         printf("%.5lf ", s->X[i]);
+    }
+    printf("]\n");
+}
+
+void imprime_residuo(struct Sistema *s) {
+    if (!s->solucao_unica)
+        return;
+
+    printf("R = [ ");
+    for (size_t i = 0; i < s->ordem; i++) {
+        printf("%.5lf ", s->R[i]);
     }
     printf("]\n");
 }
@@ -203,7 +232,9 @@ int main() {
     pivoteamento(&s);
     imprime_sistema(&s);
     retrosub(&s);
+    calcula_residuo(&s);
     imprime_solucao(&s);
+    imprime_residuo(&s);
 
     destroi_sistema(&s);
     return 0;
