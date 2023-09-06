@@ -76,10 +76,11 @@ void retrosub(struct Sistema *s) {
 }
 
 void calcula_residuo(struct Sistema *s) {
+    double acc_linha;
+
     if (!s || !s->solucao_unica)
         return;
 
-    double acc_linha = 0.0;
     for (size_t i = 0; i < s->ordem; i++) {
         acc_linha = 0.0;
         for (size_t j = 0; j < s->ordem; j++)
@@ -205,8 +206,6 @@ void pivoteamento_sem_mult(struct Sistema *s) {
         troca_linha(s, i, linha_pivo);
 
         for (size_t k = i+1; k < s->ordem; k++) {
-            // Se a maior for zero, pula e continua
-            // É dito se o Sistema tem solução ou não na retrosub
             for (size_t j = i+1; j < s->ordem; j++ )
                 s->A[k][j] = s->A[k][j] * s->A[i][i] - s->A[i][j] * s->A[k][i];
 
@@ -217,9 +216,32 @@ void pivoteamento_sem_mult(struct Sistema *s) {
 }
 
 void sem_pivoteamento(struct Sistema *s) {
-    (void)s;
-    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
-    exit(1);
+    if (!s)
+        return;
+
+    for (size_t i = 0; i <s->ordem; i++) {
+        if (fabs(s->A[i][i]) < DBL_EPSILON) { // A[i][i] == 0
+            fprintf(stderr, "[ERRO]: Não foi possível fazer a eliminação sem pivoteamento (pivo = 0)[%ld:%ld]\n", 
+                   i, i);
+            exit(1);
+        }
+
+        // eq_i = eq_i / pivo
+        for (size_t j = i+1;j< s->ordem; j++) {
+                s->A[i][j] /= s->A[i][i];
+        }
+        s->B[i] /= s->A[i][i];
+        s->A[i][i] = 1.0;
+
+        // eq_k = eq_k - eq_i * m
+        for (size_t k = i+1; k < s->ordem; k++) {
+            for (size_t j = i+1; j< s->ordem; j++) {
+                s->A[k][j] -= s->A[i][j] * s->A[k][i]; 
+            }
+            s->B[k] -= s->B[i]* s->A[k][i];
+            s->A[k][i] = 0.0;
+        }
+    }
 }
 
 int main() {
@@ -230,10 +252,10 @@ int main() {
 
     // imprime_sistema(&s);
     pivoteamento(&s);
-    imprime_sistema(&s);
+    // imprime_sistema(&s);
     retrosub(&s);
     calcula_residuo(&s);
-    imprime_solucao(&s);
+    // imprime_solucao(&s);
     imprime_residuo(&s);
 
     destroi_sistema(&s);
