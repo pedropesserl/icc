@@ -10,7 +10,10 @@
     } while (0)
 
 struct Sistema {
+    // data é uma copia do sistema para poder retomar
+    // o sistema ao estado inicial após executarum dos metodos
     double *data;
+    double *backup;
     double **A;
     double *B;
     double *X;
@@ -32,8 +35,13 @@ struct Sistema cria_sistema(size_t ordem) {
     struct Sistema s;
     s.solucao_unica = 0;
     s.ordem = ordem;
-    s.data = (double*)calloc(ordem*ordem, sizeof(double));
+    double val;
+
+    s.data = (double*)calloc(ordem*ordem+ordem, sizeof(double));
     if (!s.data)
+        MEM_ERR;
+    s.backup = (double*)calloc(ordem*ordem+ordem, sizeof(double));
+    if (!s.backup)
         MEM_ERR;
     s.B = (double*)calloc(ordem, sizeof(double));
     if (!s.B)
@@ -44,17 +52,25 @@ struct Sistema cria_sistema(size_t ordem) {
     s.R = (double*)calloc(ordem, sizeof(double));
     if (!s.R)
         MEM_ERR;
+
     for (size_t i = 0; i < ordem; i++) {
-        for (size_t j = 0; j < ordem; j++)
-            scanf("%lf", &(s.data[i*ordem+j]));
-        scanf("%lf", &(s.B[i]));
+        for (size_t j = 0; j < ordem; j++) {
+            scanf("%lf", &val);
+            s.data[i*ordem+j] = val;
+            s.backup[i*ordem+j] = val;
+        }
+        scanf("%lf", &val);
+        s.data[ordem*ordem+i] = val;
+        s.backup[ordem*ordem+i] = val;
     }
     s.A = cria_matriz(ordem, s.data);
+    s.B = &(s.data[ordem*ordem]);
     return s;
 }
 
 void destroi_sistema(struct Sistema *s) {
     free(s->data);
+    free(s->backup);
     free(s->A);
     free(s->B);
     free(s->X);
@@ -139,7 +155,7 @@ void imprime_solucao(struct Sistema *s) {
     }
     printf("X = [ ");
     for (size_t i = 0; i < s->ordem; i++) {
-        printf("%.5lf ", s->X[i]);
+        printf("%1.8e ", s->X[i]);
     }
     printf("]\n");
 }
@@ -150,7 +166,7 @@ void imprime_residuo(struct Sistema *s) {
 
     printf("R = [ ");
     for (size_t i = 0; i < s->ordem; i++) {
-        printf("%.5lf ", s->R[i]);
+        printf("%1.8e ", s->R[i]);
     }
     printf("]\n");
 }
@@ -164,9 +180,9 @@ void imprime_sistema(struct Sistema *s) {
             printf("    ┃ ");
         
         for (size_t j = 0; j < s->ordem; j++) {
-            printf("%.5lf ", s->A[i][j]);
+            printf("%1.8e ", s->A[i][j]);
         }
-        printf("   %.5lf\n", s->B[i]);
+        printf("   %1.8e\n", s->B[i]);
     }
     printf("    ┗\n");
 }
@@ -181,12 +197,12 @@ void pivoteamento(struct Sistema *s) {
     for (size_t i = 0; i < s->ordem; i++) {
         size_t linha_pivo = find_max(s, i);
         troca_linha(s, linha_pivo, i);
+        // Se a maior for zero, pula e continua
+        // É dito se o Sistema tem solução ou não na retrosub
+        if (s->A[i][i] == 0)
+            continue;
 
         for (size_t k = i+1; k < s->ordem; k++) {
-            // Se a maior for zero, pula e continua
-            // É dito se o Sistema tem solução ou não na retrosub
-            if (s->A[i][i] == 0)
-                continue;
             m = s->A[k][i] / s->A[i][i];
             s->A[k][i] = 0.0;
             for (size_t j = i+1; j < s->ordem; j++ )
@@ -216,14 +232,21 @@ void pivoteamento_sem_mult(struct Sistema *s) {
 }
 
 void sem_pivoteamento(struct Sistema *s) {
+    size_t linha_pivo;
     if (!s)
         return;
 
     for (size_t i = 0; i <s->ordem; i++) {
+        // Foi feito pivoteamento quando o pivo era 0, pois como conversado
+        // com o professor guilherme (06/09) não está especificado o que fazer
+        // então fica da escolha do aluno
         if (fabs(s->A[i][i]) < DBL_EPSILON) { // A[i][i] == 0
-            fprintf(stderr, "[ERRO]: Não foi possível fazer a eliminação sem pivoteamento (pivo = 0)[%ld:%ld]\n", 
-                   i, i);
-            exit(1);
+            linha_pivo = find_max(s, i);
+            troca_linha(s, linha_pivo, i);
+            // Se a maior for zero, pula e continua
+            // É dito se o Sistema tem solução ou não na retrosub
+            if (s->A[i][i] == 0)
+                continue;
         }
 
         // eq_i = eq_i / pivo
@@ -255,7 +278,7 @@ int main() {
     // imprime_sistema(&s);
     retrosub(&s);
     calcula_residuo(&s);
-    // imprime_solucao(&s);
+    //imprime_solucao(&s);
     imprime_residuo(&s);
 
     destroi_sistema(&s);
