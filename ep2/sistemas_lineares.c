@@ -74,7 +74,7 @@ void retrosub(struct Sistema *s) {
 // retorna linha com maior valor em módulo na coluna linha_pivo na qual i <= linha_pivo
 size_t find_max(struct Sistema *s, size_t linha_pivo) {
     double max = 0;
-    size_t id_max = 0;
+    size_t id_max = linha_pivo;
     if (!s || linha_pivo > s->ordem)
         return 0;
        
@@ -173,7 +173,7 @@ void pivoteamento_sem_mult(struct Sistema *s) {
 
     for (size_t i = 0; i < s->ordem; i++) {
         size_t linha_pivo = find_max(s, i);
-        troca_linha(s, linha_pivo, i);
+        troca_linha(s, i, linha_pivo);
 
         for (size_t k = i+1; k < s->ordem; k++) {
             // Se a maior for zero, pula e continua
@@ -200,7 +200,7 @@ int main() {
     struct Sistema s = cria_sistema(ordem);
 
     // imprime_sistema(&s);
-    pivoteamento_sem_mult(&s);
+    pivoteamento(&s);
     imprime_sistema(&s);
     retrosub(&s);
     imprime_solucao(&s);

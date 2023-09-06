@@ -11,7 +11,7 @@ all: sistemas_lineares.c
 
 run:
 	echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
-	likwid-perfctr -C 3 -g FLOPS_DP -m ./sistemas_lineares > sistema.log
+	likwid-perfctr -C 3 -g FLOPS_DP -m ./perfEG > sistema.log
 	echo "powersave" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
 
 dev: $(DEVFILES)
