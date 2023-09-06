@@ -3,7 +3,7 @@ LIKWID_HOME = /home/soft/likwid
 CFLAGS = -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -O3 -mavx -march=native -Wall -Wextra -g
 LFLAGS = -L$(LIKWID_HOME)/lib -llikwid -lm
 DEVFALGS = -g -Wall -Wextra -lm
-DEVFILES = findMax
+DEVFILES = sistemas_lineares
 
 
 all: sistemas_lineares.c
@@ -20,4 +20,4 @@ $(DEVFILES) : % : %.c
 	$(CC) $(DEVFALGS) $< -o $@
 
 purge:
-	rm -f perfEG
+	rm -f perfEG $(DEVFILES)

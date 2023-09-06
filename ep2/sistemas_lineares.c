@@ -71,24 +71,6 @@ void retrosub(struct Sistema *s) {
     s->solucao_unica = 1;
 }
 
-void pivoteamento(struct Sistema *s) {
-    (void)s;
-    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
-    exit(1);
-}
-
-void pivoteamento_sem_mult(struct Sistema *s) {
-    (void)s;
-    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
-    exit(1);
-}
-
-void sem_pivoteamento(struct Sistema *s) {
-    (void)s;
-    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
-    exit(1);
-}
-
 // retorna linha com maior valor em módulo na coluna linha_pivo na qual i <= linha_pivo
 size_t find_max(struct Sistema *s, size_t linha_pivo) {
     double max = 0;
@@ -159,12 +141,67 @@ void imprime_sistema(struct Sistema *s) {
     printf("    ┗\n");
 }
 
+// retorna 1 se conseguiu fazer a eliminação
+void pivoteamento(struct Sistema *s) {
+    double m;
+
+    if (!s)
+        return;
+
+    for (size_t i = 0; i < s->ordem; i++) {
+        size_t linha_pivo = find_max(s, i);
+        troca_linha(s, linha_pivo, i);
+
+        for (size_t k = i+1; k < s->ordem; k++) {
+            // Se a maior for zero, pula e continua
+            // É dito se o Sistema tem solução ou não na retrosub
+            if (s->A[i][i] == 0)
+                continue;
+            m = s->A[k][i] / s->A[i][i];
+            s->A[k][i] = 0.0;
+            for (size_t j = i+1; j < s->ordem; j++ )
+                s->A[k][j] -= s->A[i][j] * m;
+
+            s->B[k] -= s->B[i] * m;
+        }
+    }
+}
+
+void pivoteamento_sem_mult(struct Sistema *s) {
+    if (!s)
+        return;
+
+    for (size_t i = 0; i < s->ordem; i++) {
+        size_t linha_pivo = find_max(s, i);
+        troca_linha(s, linha_pivo, i);
+
+        for (size_t k = i+1; k < s->ordem; k++) {
+            // Se a maior for zero, pula e continua
+            // É dito se o Sistema tem solução ou não na retrosub
+            for (size_t j = i+1; j < s->ordem; j++ )
+                s->A[k][j] = s->A[k][j] * s->A[i][i] - s->A[i][j] * s->A[k][i];
+
+            s->B[k] = s->B[k] * s->A[i][i] - s->B[i] * s->A[k][i];
+            s->A[k][i] = 0.0;
+        }
+    }
+}
+
+void sem_pivoteamento(struct Sistema *s) {
+    (void)s;
+    fprintf(stderr, "%s:%d %s: NÃO IMPLEMENTADA\n", __FILE__, __LINE__, __func__);
+    exit(1);
+}
+
 int main() {
     size_t ordem;
     scanf("%ld", &ordem);
     
     struct Sistema s = cria_sistema(ordem);
 
+    // imprime_sistema(&s);
+    pivoteamento_sem_mult(&s);
+    imprime_sistema(&s);
     retrosub(&s);
     imprime_solucao(&s);
 

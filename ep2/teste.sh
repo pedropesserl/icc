@@ -5,9 +5,13 @@ if [[ ! -x $1  ]]; then
 fi
 acc=()
 prog=$1
+declare -i c
+c=0
 function execute_test {
     if [[ -n $acc ]]; then
+        #echo $acc | $prog > teste_$c.log
         echo $acc | $prog
+        c=c+1
     fi
 }
 
