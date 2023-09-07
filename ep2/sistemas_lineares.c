@@ -10,7 +10,7 @@
     } while (0)
 
 struct Sistema {
-    // data é uma copia do sistema para poder retomar
+    // backup é uma copia do sistema para poder retomar
     // o sistema ao estado inicial após executarum dos metodos
     double *data;
     double *backup;
@@ -37,14 +37,11 @@ struct Sistema cria_sistema(size_t ordem) {
     s.ordem = ordem;
     double val;
 
-    s.data = (double*)calloc(ordem*ordem+ordem, sizeof(double));
+    s.data = (double*)calloc(ordem*(ordem + 1), sizeof(double));
     if (!s.data)
         MEM_ERR;
-    s.backup = (double*)calloc(ordem*ordem+ordem, sizeof(double));
+    s.backup = (double*)calloc(ordem*(ordem + 1), sizeof(double));
     if (!s.backup)
-        MEM_ERR;
-    s.B = (double*)calloc(ordem, sizeof(double));
-    if (!s.B)
         MEM_ERR;
     s.X = (double*)calloc(ordem, sizeof(double));
     if (!s.X)
@@ -72,7 +69,6 @@ void destroi_sistema(struct Sistema *s) {
     free(s->data);
     free(s->backup);
     free(s->A);
-    free(s->B);
     free(s->X);
 }
 
