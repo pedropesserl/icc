@@ -288,11 +288,11 @@ int main() {
     struct Sistema s = cria_sistema(ordem);
 
     printf("Solução com pivoteamento:\n");
-    LIKWID_MARKER_START("Análise LIKWID: com pivoteamento");
+    LIKWID_MARKER_START("Teste1");
     t = timestamp();
     pivoteamento(&s);
     t = timestamp() - t;
-    LIKWID_MARKER_STOP("Análise LIKWID: com pivoteamento");
+    LIKWID_MARKER_STOP("Teste1");
     imprime_solucao(&s);
     printf("\nTempo da solução: %1.8e ms\n", t);
     // restaurando matriz do sistema
@@ -305,11 +305,11 @@ int main() {
     printf("\n");
 
     printf("Solução com pivoteamento, sem multiplicadores:\n");
-    LIKWID_MARKER_START("Análise LIKWID: com pivoteamento, sem multiplicadores");
+    LIKWID_MARKER_START("Teste2");
     t = timestamp();
     pivoteamento_sem_mult(&s);
     t = timestamp() - t;
-    LIKWID_MARKER_STOP("Análise LIKWID: com pivoteamento, sem multiplicadores");
+    LIKWID_MARKER_STOP("Teste2");
     imprime_solucao(&s);
     printf("\nTempo da solução: %1.8e ms\n", t);
     // restaurando matriz do sistema
@@ -322,11 +322,11 @@ int main() {
     printf("\n");
 
     printf("Solução sem pivoteamento:\n");
-    LIKWID_MARKER_START("Análise LIKWID: sem pivoteamento");
+    LIKWID_MARKER_START("Teste3");
     t = timestamp();
     sem_pivoteamento(&s);
     t = timestamp() - t;
-    LIKWID_MARKER_STOP("Análise LIKWID: sem pivoteamento");
+    LIKWID_MARKER_STOP("Teste3");
     imprime_solucao(&s);
     printf("\nTempo da solução: %1.8e ms\n", t);
     // restaurando matriz do sistema

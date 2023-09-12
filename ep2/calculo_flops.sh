@@ -9,16 +9,20 @@ LFLAGS="-L${LIKWID_HOME}/lib -llikwid -lm"
 
 echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
 
+echo "Compilando programa (sem otimização)."
 gcc ${CFLAGS} sistemas_lineares.c -o perfEG ${LFLAGS}
 for k in $METRICA
 do
+    echo "Entre com os dados do sistema."
     likwid-perfctr -C ${CPU} -g ${k} -m ./perfEG > ${k}_SemOtimiz.log
 done
 
 rm -f perfEG
+echo "Compilando programa (com otimização)."
 gcc ${CFLAGS} -O3 sistemas_lineares.c -o perfEG ${LFLAGS}
 for k in $METRICA
 do
+    echo "Entre com os dados do sistema."
     likwid-perfctr -C ${CPU} -g ${k} -m ./perfEG > ${k}_Otimiz.log
 done
 
