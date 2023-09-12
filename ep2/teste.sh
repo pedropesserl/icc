@@ -11,6 +11,7 @@ function execute_test {
     if [[ -n $acc ]]; then
         #echo $acc | $prog > teste_$c.log
         echo $acc | $prog
+        echo "-----------------------------------------"
         c=c+1
     fi
 }

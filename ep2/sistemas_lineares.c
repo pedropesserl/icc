@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <float.h>
 #include <math.h>
 #include <time.h>
+#include <likwid.h>
 
 #define MEM_ERR do {                                                                                \
         fprintf(stderr, "Erro de alocação de memória: %s:%d (%s)\n", __FILE__, __LINE__, __func__); \
@@ -22,13 +24,15 @@ struct Sistema {
     int solucao_unica;
 };
 
-double **cria_matriz(size_t tam, double *data) {
-    double **m = (double**)calloc(tam, sizeof(double*));
-    if (!m)
-        MEM_ERR;
+double timestamp() {
+    struct timespec tp;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
+    return (double)tp.tv_sec*1.0e3 + (double)tp.tv_nsec*1.0e-6;
+}
+
+void cria_matriz(size_t tam, double **m, double *data) {
     for (size_t k = 0; k < tam; k++)
         m[k] = &(data[k*tam]);
-    return m;
 }
 
 struct Sistema cria_sistema(size_t ordem) {
@@ -49,6 +53,9 @@ struct Sistema cria_sistema(size_t ordem) {
     s.R = (double*)calloc(ordem, sizeof(double));
     if (!s.R)
         MEM_ERR;
+    s.A = (double**)calloc(ordem, sizeof(double*));
+    if (!s.A)
+        MEM_ERR;
 
     for (size_t i = 0; i < ordem; i++) {
         for (size_t j = 0; j < ordem; j++) {
@@ -60,7 +67,7 @@ struct Sistema cria_sistema(size_t ordem) {
         s.data[ordem*ordem+i] = val;
         s.backup[ordem*ordem+i] = val;
     }
-    s.A = cria_matriz(ordem, s.data);
+    cria_matriz(ordem, s.A, s.data);
     s.B = &(s.data[ordem*ordem]);
     return s;
 }
@@ -157,8 +164,10 @@ void imprime_solucao(struct Sistema *s) {
 }
 
 void imprime_residuo(struct Sistema *s) {
-    if (!s->solucao_unica)
+    if (!s->solucao_unica) {
+        printf("O sistema não possui solução única.\n");
         return;
+    }
 
     printf("R = [ ");
     for (size_t i = 0; i < s->ordem; i++) {
@@ -207,6 +216,8 @@ void pivoteamento(struct Sistema *s) {
             s->B[k] -= s->B[i] * m;
         }
     }
+
+    retrosub(s);
 }
 
 void pivoteamento_sem_mult(struct Sistema *s) {
@@ -225,6 +236,8 @@ void pivoteamento_sem_mult(struct Sistema *s) {
             s->A[k][i] = 0.0;
         }
     }
+
+    retrosub(s);
 }
 
 void sem_pivoteamento(struct Sistema *s) {
@@ -261,22 +274,72 @@ void sem_pivoteamento(struct Sistema *s) {
             s->A[k][i] = 0.0;
         }
     }
+
+    retrosub(s);
 }
 
 int main() {
+    LIKWID_MARKER_INIT;
+
     size_t ordem;
+    double t;
     scanf("%ld", &ordem);
     
     struct Sistema s = cria_sistema(ordem);
 
-    // imprime_sistema(&s);
+    printf("Solução com pivoteamento:\n");
+    LIKWID_MARKER_START("Análise LIKWID: com pivoteamento");
+    t = timestamp();
     pivoteamento(&s);
-    // imprime_sistema(&s);
-    retrosub(&s);
+    t = timestamp() - t;
+    LIKWID_MARKER_STOP("Análise LIKWID: com pivoteamento");
+    imprime_solucao(&s);
+    printf("\nTempo da solução: %1.8e ms\n", t);
+    // restaurando matriz do sistema
+    memcpy(s.data, s.backup, s.ordem*(s.ordem + 1)*sizeof(double));
+    cria_matriz(ordem, s.A, s.data);
+    // depois de restaurado, calcula o resíduo
     calcula_residuo(&s);
-    //imprime_solucao(&s);
+    printf("\nResíduo:\n");
     imprime_residuo(&s);
+    printf("\n");
+
+    printf("Solução com pivoteamento, sem multiplicadores:\n");
+    LIKWID_MARKER_START("Análise LIKWID: com pivoteamento, sem multiplicadores");
+    t = timestamp();
+    pivoteamento_sem_mult(&s);
+    t = timestamp() - t;
+    LIKWID_MARKER_STOP("Análise LIKWID: com pivoteamento, sem multiplicadores");
+    imprime_solucao(&s);
+    printf("\nTempo da solução: %1.8e ms\n", t);
+    // restaurando matriz do sistema
+    memcpy(s.data, s.backup, s.ordem*(s.ordem + 1)*sizeof(double));
+    cria_matriz(ordem, s.A, s.data);
+    // depois de restaurado, calcula o resíduo
+    calcula_residuo(&s);
+    printf("\nResíduo:\n");
+    imprime_residuo(&s);
+    printf("\n");
+
+    printf("Solução sem pivoteamento:\n");
+    LIKWID_MARKER_START("Análise LIKWID: sem pivoteamento");
+    t = timestamp();
+    sem_pivoteamento(&s);
+    t = timestamp() - t;
+    LIKWID_MARKER_STOP("Análise LIKWID: sem pivoteamento");
+    imprime_solucao(&s);
+    printf("\nTempo da solução: %1.8e ms\n", t);
+    // restaurando matriz do sistema
+    memcpy(s.data, s.backup, s.ordem*(s.ordem + 1)*sizeof(double));
+    cria_matriz(ordem, s.A, s.data);
+    // depois de restaurado, calcula o resíduo
+    calcula_residuo(&s);
+    printf("\nResíduo:\n");
+    imprime_residuo(&s);
+    printf("\n");
 
     destroi_sistema(&s);
+    
+    LIKWID_MARKER_CLOSE;
     return 0;
 }
