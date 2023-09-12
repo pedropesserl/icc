@@ -1,0 +1,6 @@
+Nomes: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
+
+Limitações encontradas:
+
+Percebemos que, em alguns casos de teste, o resíduo das equações foi diferente em cada
+método de resolução, mesmo que a solução encontrada tenha sido a mesma.
