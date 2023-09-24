@@ -34,16 +34,18 @@ double interpolacao_lagrange(double x, struct Ponto *tabela, size_t n) {
     for (size_t i = 0; i < n; i++)
         pre_num *= x - tabela[i].x;
 
+    double den;
     double px = 0.0;
     for (size_t i = 0; i < n; i++) {
         double xi = tabela[i].x;
+        den = x - xi;
 
-        double li = pre_num / (x - xi);
         for (size_t j = 0; j < i; j++)
-            li /= xi - tabela[j].x;
+            den *= xi - tabela[j].x;
         for (size_t j = i+1; j < n; j++)
-            li /= xi - tabela[j].x;
+            den *= xi - tabela[j].x;
 
+        double li = pre_num / den;
         px += li * tabela[i].fx;
     }
 
@@ -74,6 +76,8 @@ double interpolacao_newton(double x, double **dif_div, struct Ponto *tabela, siz
 }
 
 int main(int argc, char **argv) {
+    LIKWID_MARKER_INIT;
+
     if (argc != 2) {
         fprintf(stderr, "Uso: %s <valor_a_ser_interpolado>\n", argv[0]);
         return 1;
@@ -94,9 +98,11 @@ int main(int argc, char **argv) {
         return 2;
     }
 
+    LIKWID_MARKER_START("Metodo_Lagrange");
     real_t t = timestamp();
     double pxe_l = interpolacao_lagrange(xe, tabela, n);
     real_t t_l = timestamp() - t;
+    LIKWID_MARKER_STOP("Metodo_Lagrange");
     printf("%1.8e\n", pxe_l);
 
     // cria matriz para armazenar diferenças divididas no método de newton
@@ -106,9 +112,11 @@ int main(int argc, char **argv) {
     if (!data) MEM_ERR;
     cria_matriz(n, dif_div, data);
 
+    LIKWID_MARKER_START("Metodo_Newton");
     t = timestamp();
     double pxe_n = interpolacao_newton(xe, dif_div, tabela, n);
     real_t t_n = timestamp() - t;
+    LIKWID_MARKER_STOP("Metodo_Newton");
     printf("%1.8e\n", pxe_n);
 
     printf("%1.8e\n", t_l);
@@ -118,5 +126,6 @@ int main(int argc, char **argv) {
     free(dif_div);
     free(tabela);
 
+    LIKWID_MARKER_CLOSE;
     return 0;
 }
