@@ -3,24 +3,8 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
-#include "intervalo.h"
+#include "../include/sistema_linear.h"
 
-#define MEM_ERR do {                                                                                \
-        fprintf(stderr, "Erro de alocação de memória: %s:%d (%s)\n", __FILE__, __LINE__, __func__); \
-        exit(1);                                                                                    \
-    } while (0)
-
-struct Sistema_t {
-    struct Inter_t *data;
-    // Todo o sistema, incluindo o termos independentes (B).
-    struct Inter_t **A;
-    struct Inter_t *B;
-    struct Inter_t *X;
-    struct Inter_t *R;
-    size_t ordem;
-};
-
-// Cria referencia em A para os coeficientes do SL
 void cria_matriz(size_t tam, struct Inter_t **m, struct Inter_t *data) {
     for (size_t k = 0; k < tam; k++)
         m[k] = &(data[k*tam]);
@@ -78,7 +62,6 @@ void calcula_residuo(struct Sistema_t *s) {
     }
 }
 
-// retorna linha com maior valor em módulo na coluna linha_pivo na qual i <= linha_pivo
 size_t find_max(struct Sistema_t *s, size_t linha_pivo) {
     struct Inter_t max = ZERO_INTER;
     size_t id_max = linha_pivo;
@@ -86,7 +69,7 @@ size_t find_max(struct Sistema_t *s, size_t linha_pivo) {
         return 0;
        
     if (linha_pivo == s->ordem - 1) // Se tiver apenas um elemento nas
-        return linha_pivo;          //linhas de baixos de linha_pivo
+        return linha_pivo;          // linhas de baixo de linha_pivo
 
     for (size_t i = linha_pivo; i < s->ordem; i++) {
         if (compara_inter(fabs_inter(s->A[i][linha_pivo]), max) == INTER_MAIOR ) {
@@ -151,8 +134,7 @@ void imprime_sistema(struct Sistema_t *s) {
     printf("    ┗\n");
 }
 
-// retorna 1 se conseguiu fazer a eliminação
-void pivoteamento(struct Sistema_t *s) {
+void eliminacao_gauss(struct Sistema_t *s) {
     struct Inter_t m;
 
     if (!s)
@@ -161,8 +143,6 @@ void pivoteamento(struct Sistema_t *s) {
     for (size_t i = 0; i < s->ordem; i++) {
         size_t linha_pivo = find_max(s, i);
         troca_linha(s, linha_pivo, i);
-        // Se a maior for zero, pula e continua
-        // É dito se o Sistema_t tem solução ou não na retrosub
         if (s->A[i][i].lo <= 0 && 0 <= s->A[i][i].up)
             continue;
 

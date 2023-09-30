@@ -13,7 +13,7 @@
 
 struct Sistema {
     // backup é uma copia do sistema para poder retomar
-    // o sistema ao estado inicial após executarum dos metodos
+    // o sistema ao estado inicial após executar um dos metodos
     double *data;
     double *backup;
     double **A;

@@ -3,7 +3,7 @@
 #include <float.h>
 #include <math.h> // INFINITY, -INFINITY, nextaftert
 #include <fenv.h>
-#include "intervalo.h"
+#include "../include/intervalo.h"
 
 // double nextafter(double x, double y); retorna o proximo double depois de x na direção de y
 //     ou seja:
@@ -60,14 +60,14 @@ struct Inter_t div_inter(struct Inter_t a, struct Inter_t b) {
     return div;
 }
 
-int calcula_ulps(struct Inter_t f) {
+long calcula_ulps(struct Inter_t f) {
     if (INTREP(f.up) == INTREP(f.lo)) // são o mesmo número
         return 0;
-    int lo = INTREP(f.lo) & ~(1<<31); // desligando MSB
-    int up = INTREP(f.up) & ~(1<<31);
+    long lo = INTREP(f.lo) & ~(1<<31); // desligando MSB
+    long up = INTREP(f.up) & ~(1<<31);
     if ((INTREP(f.up) >> 31) != (INTREP(f.lo) >> 31)) // um é positivo e o outro é negativo
         return up + lo - 1;
-    return abs(up - lo) - 1;
+    return labs(up - lo) - 1;
 }
 
 int compara_inter(struct Inter_t a, struct Inter_t b) {

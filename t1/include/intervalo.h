@@ -10,7 +10,7 @@
 #define FMTINTER(intervalo) intervalo.lo, intervalo.up
 // Uso: printf("Teste: "INTERFMT" final", FMTINTER(intervalo));
 
-#define INTREP(f) (*(int*)(&(f)))
+#define INTREP(d) (*(long*)(&(d)))
 
 #define INTER_IGUAL 0
 #define INTER_MENOR -1
@@ -32,13 +32,13 @@ struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b);
 
 struct Inter_t div_inter(struct Inter_t a, struct Inter_t b); 
 
-int calcula_ulps(struct Inter_t f); 
+long calcula_ulps(struct Inter_t f); 
 
-// retorna INTER_IGUAL se a ~= b
-// retorna INTER_MENOR se a < b
-// retorna INTER_MAIOR se a > b
-//
+// Retorna INTER_IGUAL se a ~= b
+// Retorna INTER_MENOR se a < b
+// Retorna INTER_MAIOR se a > b
 int compara_inter(struct Inter_t a, struct Inter_t b);
 
 struct Inter_t fabs_inter(struct Inter_t a);
-#endif
+
+#endif // INTERVALO_H_
