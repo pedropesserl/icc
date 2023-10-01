@@ -14,7 +14,7 @@ struct Sistema_t cria_sistema(size_t ordem) {
     struct Sistema_t s;
     s.ordem = ordem;
 
-    // Aloca memoria para os coeficientes e termos independentew
+    // Aloca memória para os coeficientes e termos independentes
     s.data = (struct Inter_t*)calloc(ordem*(ordem + 1), sizeof(struct Inter_t));
     if (!s.data)
         MEM_ERR;

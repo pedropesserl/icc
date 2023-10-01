@@ -16,7 +16,8 @@
 #define INTER_MENOR -1
 #define INTER_MAIOR 1
 
-#define ZERO_INTER (struct Inter_t){.lo=0.0, .up=0.0}
+#define ZERO_INTER (struct Inter_t){.lo = 0.0, .up = 0.0}
+#define UM_INTER (struct Inter_1){.lo = 1.0, .up = 1.0}
 
 struct Inter_t {
     double lo, up;
