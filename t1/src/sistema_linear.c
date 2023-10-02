@@ -129,7 +129,7 @@ void imprime_sistema(struct Sistema_t *s) {
         
         for (size_t j = 0; j < s->ordem; j++)
             printf(INTERFMT" ", FMTINTER(s->A[i][j]));
-        printf("   "INTERFMT, FMTINTER(s->B[i]));
+        printf("   "INTERFMT"\n", FMTINTER(s->B[i]));
     }
     printf("    ┗\n");
 }

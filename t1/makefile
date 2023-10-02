@@ -1,7 +1,7 @@
 CC = gcc
 PROGRAM = ajustePol
 LIKWID_HOME = /home/soft/likwid
-CFLAGS = -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native -Wall -Wextra
+CFLAGS = -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native -Wall -Wextra -g
 LFLAGS = -L$(LIKWID_HOME)/lib -llikwid -lm
 
 _OBJ = main.o intervalo.o sistema_linear.o ajuste_polinomial.o utils.o

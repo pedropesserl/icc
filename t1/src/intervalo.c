@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
-#include <math.h> // INFINITY, -INFINITY, nextaftert
+#include <math.h> // INFINITY, -INFINITY, nextafter, pow
 #include <fenv.h>
 #include "../include/intervalo.h"
 
@@ -59,6 +59,33 @@ struct Inter_t div_inter(struct Inter_t a, struct Inter_t b) {
     div = mult_inter(a, b);
     return div;
 }
+
+/* struct Inter_t pot_inter(struct Inter_t a, size_t b) { */
+/*     if (b == 0) */
+/*         return UM_INTER; */
+
+/*     struct Inter_t pot = a; */
+/*     size_t i = b; */
+/*     while (i > 1) { */
+/*         pot.lo *= pot.lo; */
+/*         pot.up *= pot.up; */
+/*         i--; */
+/*     } */
+
+/*     if (b % 2 == 1 || a.lo >= 0) */
+/*         return pot; */
+
+/*     if (a.up < 0) { */
+/*         double aux = pot.lo; */
+/*         pot.lo = pot.up; */
+/*         pot.up = aux; */
+/*         return pot; */
+/*     } */
+
+/*     pot.up = MAX2(pot.lo, pot.up); */
+/*     pot.lo = 0.0; */
+/*     return pot; */
+/* } */
 
 long calcula_ulps(struct Inter_t f) {
     if (INTREP(f.up) == INTREP(f.lo)) // são o mesmo número

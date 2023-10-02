@@ -17,7 +17,7 @@
 #define INTER_MAIOR 1
 
 #define ZERO_INTER (struct Inter_t){.lo = 0.0, .up = 0.0}
-#define UM_INTER (struct Inter_1){.lo = 1.0, .up = 1.0}
+#define UM_INTER (struct Inter_t){.lo = 1.0, .up = 1.0}
 
 struct Inter_t {
     double lo, up;
@@ -32,6 +32,9 @@ struct Inter_t sub_inter(struct Inter_t a, struct Inter_t b);
 struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b); 
 
 struct Inter_t div_inter(struct Inter_t a, struct Inter_t b); 
+
+// ver se vamos manter essa função ou não
+/* struct Inter_t pot_inter(struct Inter_t a, size_t b); */
 
 long calcula_ulps(struct Inter_t f); 
 
