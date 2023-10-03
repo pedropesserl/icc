@@ -5,7 +5,12 @@
 #include <math.h>
 #include "../include/sistema_linear.h"
 
-void cria_matriz(size_t tam, struct Inter_t **m, struct Inter_t *data) {
+void cria_matriz(size_t nlin, size_t ncol, struct Inter_t **m, struct Inter_t *data) {
+    for (size_t k = 0; k < nlin; k++)
+        m[k] = &(data[k*ncol]);
+}
+
+void cria_matriz_quadrada(size_t tam, struct Inter_t **m, struct Inter_t *data) {
     for (size_t k = 0; k < tam; k++)
         m[k] = &(data[k*tam]);
 }
@@ -28,7 +33,7 @@ struct Sistema_t cria_sistema(size_t ordem) {
     if (!s.A)
         MEM_ERR;
 
-    cria_matriz(ordem, s.A, s.data);
+    cria_matriz_quadrada(ordem, s.A, s.data);
     s.B = &(s.data[ordem*ordem]);
     return s;
 }

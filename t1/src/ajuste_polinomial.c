@@ -5,33 +5,40 @@
 
 void preenche_SL_MQ(struct Sistema_t *s, size_t npts,
                     struct Inter_t *xs, struct Inter_t *ys) {
-    // Criando tabela de lookup para as potências de 0 a 2k de todos os xs (k = ordem-1)
+    // Criando tabela de lookup para as potências de 0 a 2m de todos os xs (m = ordem-1)
     //
-    // [ [    1,    x0,  x0^2, ..., x0^2k],
-    //   [    1,    x1,  x1^2, ..., x1^2k],
-    //   [    1,    x2,  x2^2, ..., x2^2k],
+    // [ [    1,    x0,  x0^2, ..., x0^2m],
+    //   [    1,    x1,  x1^2, ..., x1^2m],
+    //   [    1,    x2,  x2^2, ..., x2^2m],
     //   ...
-    //   [    1,    xn,  xn^2, ..., xn^2k] ]
+    //   [    1,    xn,  xn^2, ..., xn^2m] ]
     //
     //  ver se é melhor usar a matriz desse jeito ou com as colunas e linhas trocadas
     //
+    size_t m = s->ordem - 1;
     struct Inter_t **pots_xs = (struct Inter_t**)calloc(npts, sizeof(struct Inter_t*));
     if (!pots_xs)
         MEM_ERR;
-    struct Inter_t *data = (struct Inter_t*)calloc((s->ordem*2-1)*npts,
-                                                    sizeof(struct Inter_t));
+    struct Inter_t *data = (struct Inter_t*)calloc((2*m+1)*npts, sizeof(struct Inter_t));
     if (!data)
         MEM_ERR;
-    cria_matriz(npts, pots_xs, data);
+    cria_matriz(npts, 2*m+1, pots_xs, data);
     for (size_t i = 0; i < npts; i++) {
         struct Inter_t pot_atual = UM_INTER;
-        for (size_t j = 0; j < s->ordem*2-1; j++) {
+        for (size_t j = 0; j <= 2*m; j++) {
             pots_xs[i][j] = pot_atual;
             pot_atual = mult_inter(pot_atual, xs[i]);
         }
     }
 
-    // preenchendo primeira coluna da matriz do sistema e coluna de termos independentes
+    printf("Matriz de potencias gerada em %s (REMOVER ISSO DEPOIS):\n", __func__);
+    for (size_t i = 0; i < npts; i++) {
+        for (size_t j = 0; j <= 2*m; j++)
+            printf(INTERFMT" ", FMTINTER(pots_xs[i][j]));
+        printf("\n");
+    }
+
+    // preenchendo primeira linha da matriz do sistema e coluna de termos independentes
     for (size_t k = 0; k < s->ordem; k++) {
         struct Inter_t soma_xs = ZERO_INTER;
         struct Inter_t soma_ys_xs = ZERO_INTER;
@@ -55,19 +62,18 @@ void preenche_SL_MQ(struct Sistema_t *s, size_t npts,
     //     }
     // }
 
-    // completando última linha da matriz do sistema
+    // completando última coluna da matriz do sistema
     for (size_t k = 1; k < s->ordem; k++) {
         struct Inter_t soma_xs = ZERO_INTER;
         for (size_t i = 0; i < npts; i++)
             soma_xs = soma_inter(soma_xs, pots_xs[i][k]);
-        s->A[s->ordem-1][k] = soma_xs;
+        s->A[k][s->ordem-1] = soma_xs;
     }
     
     // completando valores simétricos do sistema
-    for (size_t i = 0; i < s->ordem-1; i++)
-        for (size_t j = 1; j < s->ordem; j++)
-            s->A[i][j] = s->A[i+1][j-1];
-
+    for (size_t i = 1; i < s->ordem; i++)
+        for (size_t j = 0; j < s->ordem-1; j++)
+            s->A[i][j] = s->A[i-1][j+1];
 
     free(data);
     free(pots_xs);

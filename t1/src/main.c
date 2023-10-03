@@ -29,7 +29,7 @@ int main(void) {
     preenche_SL_MQ(&sistema, k, xs, ys);
     t_gera_SL = timestamp() - t_gera_SL;
 
-    printf("sistema gerado em cria_SL_MQ (REMOVER ISSO DEPOIS):\n");
+    printf("sistema gerado em preenche_SL_MQ (REMOVER ISSO DEPOIS):\n");
     imprime_sistema(&sistema);
 
     rtime_t t_solu_SL = timestamp();

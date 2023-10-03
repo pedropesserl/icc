@@ -18,8 +18,12 @@ struct Sistema_t {
     size_t ordem;
 };
 
-// Cria referência dos ponteiros de m ao vetor data
-void cria_matriz(size_t tam, struct Inter_t **m, struct Inter_t *data);
+// Cria referência dos ponteiros de m ao vetor data, para uma matriz de
+// nlin linhas e ncol colunas.
+void cria_matriz(size_t nlin, size_t ncol, struct Inter_t **m, struct Inter_t *data);
+
+// Cria referência dos ponteiros de m ao vetor data, para uma matriz quadrada.
+void cria_matriz_quadrada(size_t tam, struct Inter_t **m, struct Inter_t *data);
 
 // Aloca memória para um sistema vazio
 struct Sistema_t cria_sistema(size_t ordem);
