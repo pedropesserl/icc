@@ -3,20 +3,8 @@
 #include "sistema_linear.h"
 #include "ajuste_polinomial.h"
 
-struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
-                            struct Inter_t *xs, struct Inter_t *ys) {
-    struct Sistema_t s = cria_sistema(ordem);
-    // Criando tabela de lookup para as potências de 0 a 2m de todos os xs (m = ordem-1)
-    //
-    // [ [    1,    x0,  x0^2, ..., x0^2m],
-    //   [    1,    x1,  x1^2, ..., x1^2m],
-    //   [    1,    x2,  x2^2, ..., x2^2m],
-    //   ...
-    //   [    1,    xn,  xn^2, ..., xn^2m] ]
-    //
+struct Inter_t **tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs) {
     //  ver se é melhor usar a matriz desse jeito ou com as colunas e linhas trocadas
-    //
-    size_t m = s.ordem - 1;
     struct Inter_t **pots_xs = (struct Inter_t**)calloc(npts, sizeof(struct Inter_t*));
     if (!pots_xs)
         MEM_ERR;
@@ -31,10 +19,16 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
             pot_atual = mult_inter(pot_atual, xs[i]);
         }
     }
+    return pots_xs;
+}
 
+struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
+                            struct Inter_t **pots_xs, struct Inter_t *ys) {
+    struct Sistema_t s = cria_sistema(ordem);
+    
     printf("Matriz de potencias gerada em %s (REMOVER ISSO DEPOIS):\n", __func__);
     for (size_t i = 0; i < npts; i++) {
-        for (size_t j = 0; j <= 2*m; j++)
+        for (size_t j = 0; j <= 2*(ordem - 1); j++)
             printf(INTERFMT" ", FMTINTER(pots_xs[i][j]));
         printf("\n");
     }
@@ -54,7 +48,7 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
     //
     // ver qual implementação é mais eficiente
     //
-    // for (size_t i = 0; i < npts; i++) {
+    // for (size_t i = 0struct Sistema_t *s, struct Inter_t *xs, struct Inter_t *ys; i < npts; i++) {
     //     struct Intervalo_t pot_xi = UM_INTER;
     //     for (size_t k = 0; k < s.ordem; k++) {
     //         s.A[0][k] = soma_inter(s.A[0][k], pot_xi);
@@ -76,10 +70,17 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
         for (size_t j = 0; j < s.ordem-1; j++)
             s.A[i][j] = s.A[i-1][j+1];
 
-    free(data);
-    free(pots_xs);
-
     return s;
 }
 
-
+struct Inter_t *calcula_residuo(struct Sistema_t *s, struct Inter_t **pots_xs,
+                                struct Inter_t *ys) {
+    struct Inter_t *r = (struct Inter_t*)calloc(s->ordem, sizeof(struct Inter_t));
+    for (size_t i = 0; i < s->ordem; i++) {
+        struct Inter_t res = ZERO_INTER;
+        for (size_t j = 0; j < s->ordem; j++)
+            res = soma_inter(res, mult_inter(s->X[j], pots_xs[i][j]));
+        r[i] = sub_inter(res, ys[i]);
+    }
+    return r;
+}

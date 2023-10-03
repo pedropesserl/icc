@@ -23,9 +23,10 @@ int main(void) {
         xs[i].lo = inx; xs[i].up = M(inx);
         ys[i].lo = iny; ys[i].up = M(iny);
     }
-    
+
     rtime_t t_gera_SL = timestamp();
-    struct Sistema_t sistema = cria_SL_MQ(n+1, k, xs, ys);
+    struct Inter_t **pots_xs = tabela_potencias_xs(n, k, xs);
+    struct Sistema_t sistema = cria_SL_MQ(n+1, k, pots_xs, ys);
     t_gera_SL = timestamp() - t_gera_SL;
 
     printf("sistema gerado em preenche_SL_MQ (REMOVER ISSO DEPOIS):\n");
@@ -35,19 +36,20 @@ int main(void) {
     eliminacao_gauss(&sistema);
     t_solu_SL = timestamp() - t_solu_SL;
 
-
-    struct Inter_t *residuos = (struct Inter_t*)calloc(n+1, sizeof(struct Inter_t));
+    struct Inter_t *residuos = calcula_residuo(&sistema, pots_xs, ys);
 
     for (size_t i = 0; i < n+1; i++)
         printf(INTERFMT" ", FMTINTER(sistema.X[i]));
     printf("\n");
     for (size_t i = 0; i < n+1; i++)
         printf(INTERFMT" ", FMTINTER(residuos[i]));
+    printf("\n");
 
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);
 
     destroi_sistema(&sistema);
+    free(pots_xs);
     free(residuos);
     free(xs);
     free(ys);
