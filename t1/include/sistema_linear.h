@@ -14,7 +14,6 @@ struct Sistema_t {
     struct Inter_t **A;
     struct Inter_t *B;
     struct Inter_t *X;
-    struct Inter_t *R;
     size_t ordem;
 };
 
@@ -33,9 +32,6 @@ void destroi_sistema(struct Sistema_t *s);
 
 // Aplica a retrossubstituição no sistema s (presume-se que já triangularizado)
 void retrosub(struct Sistema_t *s);
-
-// Preenche o vetor R do sistema s, após ter sido resolvido
-void calcula_residuo(struct Sistema_t *s);
 
 // Retorna linha com maior valor em módulo na coluna linha_pivo na qual i <= linha_pivo
 size_t find_max(struct Sistema_t *s, size_t linha_pivo);

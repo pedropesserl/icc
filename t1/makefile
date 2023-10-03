@@ -1,8 +1,8 @@
 CC = gcc
 PROGRAM = ajustePol
 LIKWID_HOME = /home/soft/likwid
-CFLAGS = -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native -Wall -Wextra -g
-LFLAGS = -L$(LIKWID_HOME)/lib -llikwid -lm
+CFLAGS = -Iinclude -Wall -Wextra -g
+LFLAGS = -lm
 
 _OBJ = main.o intervalo.o sistema_linear.o ajuste_polinomial.o utils.o
 _DEPS = intervalo.h sistema_linear.h ajuste_polinomial.h utils.h
@@ -15,7 +15,11 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 %.o: %c $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $< $(LFLAGS)
 
+all: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native
+all: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
 all: $(PROGRAM)
+
+debug: $(PROGRAM)
 
 $(PROGRAM): $(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)

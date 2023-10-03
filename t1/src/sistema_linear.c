@@ -3,7 +3,7 @@
 #include <string.h>
 #include <float.h>
 #include <math.h>
-#include "../include/sistema_linear.h"
+#include "sistema_linear.h"
 
 void cria_matriz(size_t nlin, size_t ncol, struct Inter_t **m, struct Inter_t *data) {
     for (size_t k = 0; k < nlin; k++)
@@ -26,9 +26,6 @@ struct Sistema_t cria_sistema(size_t ordem) {
     s.X = (struct Inter_t*)calloc(ordem, sizeof(struct Inter_t));
     if (!s.X)
         MEM_ERR;
-    s.R = (struct Inter_t*)calloc(ordem, sizeof(struct Inter_t));
-    if (!s.R)
-        MEM_ERR;
     s.A = (struct Inter_t**)calloc(ordem, sizeof(struct Inter_t*));
     if (!s.A)
         MEM_ERR;
@@ -50,20 +47,6 @@ void retrosub(struct Sistema_t *s) {
         for (int j = i+1; (size_t)j < s->ordem; j++)
             s->X[i] = sub_inter(s->X[i], mult_inter(s->A[i][j], s->X[j]));
         s->X[i] = div_inter(s->X[i], s->A[i][i]);
-    }
-}
-
-void calcula_residuo(struct Sistema_t *s) {
-    struct Inter_t acc_linha;
-
-    if (!s)
-        return;
-
-    for (size_t i = 0; i < s->ordem; i++) {
-        acc_linha = ZERO_INTER;
-        for (size_t j = 0; j < s->ordem; j++)
-            acc_linha = soma_inter(acc_linha, mult_inter(s->A[i][j], s->X[j]));
-        s->R[i] = sub_inter(acc_linha, s->B[i]);
     }
 }
 
@@ -112,14 +95,6 @@ void imprime_solucao(struct Sistema_t *s) {
     printf("X = { ");
     for (size_t i = 0; i < s->ordem; i++) {
         printf(INTERFMT" ", FMTINTER(s->X[i]));
-    }
-    printf("}\n");
-}
-
-void imprime_residuo(struct Sistema_t *s) {
-    printf("R = { ");
-    for (size_t i = 0; i < s->ordem; i++) {
-        printf(INTERFMT" ", FMTINTER(s->R[i]));
     }
     printf("}\n");
 }

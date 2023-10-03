@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fenv.h>
-#include <likwid.h>
-#include "../include/utils.h"
-#include "../include/intervalo.h"
-#include "../include/sistema_linear.h"
-#include "../include/ajuste_polinomial.h"
+/* #include <likwid.h> */
+#include "utils.h"
+#include "intervalo.h"
+#include "sistema_linear.h"
+#include "ajuste_polinomial.h"
 
 int main(void) {
     fesetround(FE_DOWNWARD);
@@ -24,9 +24,8 @@ int main(void) {
         ys[i].lo = iny; ys[i].up = M(iny);
     }
     
-    struct Sistema_t sistema = cria_sistema(n+1);
     rtime_t t_gera_SL = timestamp();
-    preenche_SL_MQ(&sistema, k, xs, ys);
+    struct Sistema_t sistema = cria_SL_MQ(n+1, k, xs, ys);
     t_gera_SL = timestamp() - t_gera_SL;
 
     printf("sistema gerado em preenche_SL_MQ (REMOVER ISSO DEPOIS):\n");
@@ -36,18 +35,20 @@ int main(void) {
     eliminacao_gauss(&sistema);
     t_solu_SL = timestamp() - t_solu_SL;
 
-    calcula_residuo(&sistema);
+
+    struct Inter_t *residuos = (struct Inter_t*)calloc(n+1, sizeof(struct Inter_t));
 
     for (size_t i = 0; i < n+1; i++)
         printf(INTERFMT" ", FMTINTER(sistema.X[i]));
     printf("\n");
     for (size_t i = 0; i < n+1; i++)
-        printf(INTERFMT" ", FMTINTER(sistema.R[i]));
-    printf("\n");
+        printf(INTERFMT" ", FMTINTER(residuos[i]));
+
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);
 
     destroi_sistema(&sistema);
+    free(residuos);
     free(xs);
     free(ys);
     return 0;
