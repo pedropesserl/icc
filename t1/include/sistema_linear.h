@@ -1,3 +1,4 @@
+# Authos: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 #ifndef SISTEMA_LINEAR_H_
 #define SISTEMA_LINEAR_H_
 
