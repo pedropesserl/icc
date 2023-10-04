@@ -3,11 +3,7 @@
 #include "sistema_linear.h"
 #include "ajuste_polinomial.h"
 
-struct Inter_t **tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs) {
-    //  ver se é melhor usar a matriz desse jeito ou com as colunas e linhas trocadas
-    struct Inter_t **pots_xs = (struct Inter_t**)calloc(npts, sizeof(struct Inter_t*));
-    if (!pots_xs)
-        MEM_ERR;
+struct Inter_t *tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs, struct Inter_t **pots_xs) {
     struct Inter_t *data = (struct Inter_t*)calloc((2*m+1)*npts, sizeof(struct Inter_t));
     if (!data)
         MEM_ERR;
@@ -19,20 +15,13 @@ struct Inter_t **tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs) 
             pot_atual = mult_inter(pot_atual, xs[i]);
         }
     }
-    return pots_xs;
+    return data;
 }
 
 struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
                             struct Inter_t **pots_xs, struct Inter_t *ys) {
     struct Sistema_t s = cria_sistema(ordem);
     
-    printf("Matriz de potencias gerada em %s (REMOVER ISSO DEPOIS):\n", __func__);
-    for (size_t i = 0; i < npts; i++) {
-        for (size_t j = 0; j <= 2*(ordem - 1); j++)
-            printf(INTERFMT" ", FMTINTER(pots_xs[i][j]));
-        printf("\n");
-    }
-
     // preenchendo primeira linha da matriz do sistema e coluna de termos independentes
     for (size_t k = 0; k < s.ordem; k++) {
         struct Inter_t soma_xs = ZERO_INTER;
@@ -45,17 +34,6 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
         s.A[0][k] = soma_xs;
         s.B[k] = soma_ys_xs;
     }
-    //
-    // ver qual implementação é mais eficiente
-    //
-    // for (size_t i = 0struct Sistema_t *s, struct Inter_t *xs, struct Inter_t *ys; i < npts; i++) {
-    //     struct Intervalo_t pot_xi = UM_INTER;
-    //     for (size_t k = 0; k < s.ordem; k++) {
-    //         s.A[0][k] = soma_inter(s.A[0][k], pot_xi);
-    //         s.B[k] = soma_inter(s.B[k], mult_inter(ys[i], pot_xi));
-    //         pot_xi = mult_inter(pot_xi, xs[i]);
-    //     }
-    // }
 
     // completando última coluna da matriz do sistema
     for (size_t k = 1; k < s.ordem; k++) {

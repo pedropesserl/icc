@@ -9,15 +9,19 @@ _DEPS = intervalo.h sistema_linear.h ajuste_polinomial.h utils.h
 
 SDIR = src
 IDIR = include
-OBJ = $(patsubst %,$(SDIR)/%,$(_OBJ))
-DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+OBJ = $(_OBJ:%=$(SDIR)/%)
+DEPS = $(_DEPS:%=$(IDIR)/%)
 
 %.o: %c $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $< $(LFLAGS)
 
-all: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native
+all: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native -O3
 all: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
 all: $(PROGRAM)
+
+sem_otimizacao: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native
+sem_otimizacao: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
+sem_otimizacao: $(PROGRAM)
 
 debug: $(PROGRAM)
 

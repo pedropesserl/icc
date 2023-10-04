@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fenv.h>
-/* #include <likwid.h> */
+#include <likwid.h>
 #include "utils.h"
 #include "intervalo.h"
 #include "sistema_linear.h"
 #include "ajuste_polinomial.h"
 
 int main(void) {
+    LIKWID_MARKER_INIT;
+
     fesetround(FE_DOWNWARD);
     size_t n, k;
     scanf("%ld %ld", &n, &k);
@@ -25,15 +27,19 @@ int main(void) {
     }
 
     rtime_t t_gera_SL = timestamp();
-    struct Inter_t **pots_xs = tabela_potencias_xs(n, k, xs);
+    LIKWID_MARKER_START("Gera_SL");
+    struct Inter_t **pots_xs = (struct Inter_t**)calloc(k, sizeof(struct Inter_t*));
+    if (!pots_xs)
+        MEM_ERR;
+    struct Inter_t *data = tabela_potencias_xs(n, k, xs, pots_xs);
     struct Sistema_t sistema = cria_SL_MQ(n+1, k, pots_xs, ys);
+    LIKWID_MARKER_STOP("Gera_SL");
     t_gera_SL = timestamp() - t_gera_SL;
 
-    printf("sistema gerado em preenche_SL_MQ (REMOVER ISSO DEPOIS):\n");
-    imprime_sistema(&sistema);
-
     rtime_t t_solu_SL = timestamp();
+    LIKWID_MARKER_START("Resolve_SL");
     eliminacao_gauss(&sistema);
+    LIKWID_MARKER_STOP("Resolve_SL");
     t_solu_SL = timestamp() - t_solu_SL;
 
     struct Inter_t *residuos = calcula_residuo(&sistema, k, pots_xs, ys);
@@ -50,8 +56,11 @@ int main(void) {
 
     destroi_sistema(&sistema);
     free(pots_xs);
+    free(data);
     free(residuos);
     free(xs);
     free(ys);
+
+    LIKWID_MARKER_CLOSE;
     return 0;
 }

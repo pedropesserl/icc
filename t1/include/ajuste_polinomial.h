@@ -11,7 +11,9 @@
 //   ...
 //   [    1,    xn,  xn^2, ..., xn^2m] ]
 //
-struct Inter_t **tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs);
+// Retorna vetor de dados alocado
+// !! A função caller deve liberar a memória !!
+struct Inter_t *tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs, struct Inter_t **pots_xs);
 
 // Cria o sistema linear para o método dos Mínimos Quadrados
 // dada a tabela de pontos e a ordem do sistema (ordem = grau_polinomio + 1)
