@@ -36,12 +36,12 @@ int main(void) {
     eliminacao_gauss(&sistema);
     t_solu_SL = timestamp() - t_solu_SL;
 
-    struct Inter_t *residuos = calcula_residuo(&sistema, pots_xs, ys);
+    struct Inter_t *residuos = calcula_residuo(&sistema, k, pots_xs, ys);
 
     for (size_t i = 0; i < n+1; i++)
         printf(INTERFMT" ", FMTINTER(sistema.X[i]));
     printf("\n");
-    for (size_t i = 0; i < n+1; i++)
+    for (size_t i = 0; i < k; i++)
         printf(INTERFMT" ", FMTINTER(residuos[i]));
     printf("\n");
 

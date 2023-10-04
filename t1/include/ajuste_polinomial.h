@@ -19,7 +19,7 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
                             struct Inter_t **pots_xs, struct Inter_t *ys);
 
 // Calcula o resíduo relativo ao polinômio gerado e à tabela original de pontos
-struct Inter_t *calcula_residuo(struct Sistema_t *s, struct Inter_t **pots_xs,
-                                struct Inter_t *ys);
+struct Inter_t *calcula_residuo(struct Sistema_t *s, size_t npts,
+                                struct Inter_t **pots_xs, struct Inter_t *ys);
 
 #endif // AJUSTE_POLINOMIAL_H_

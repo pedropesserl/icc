@@ -61,7 +61,7 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
     for (size_t k = 1; k < s.ordem; k++) {
         struct Inter_t soma_xs = ZERO_INTER;
         for (size_t i = 0; i < npts; i++)
-            soma_xs = soma_inter(soma_xs, pots_xs[i][k]);
+            soma_xs = soma_inter(soma_xs, pots_xs[i][k+s.ordem-1]);
         s.A[k][s.ordem-1] = soma_xs;
     }
     
@@ -73,10 +73,10 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
     return s;
 }
 
-struct Inter_t *calcula_residuo(struct Sistema_t *s, struct Inter_t **pots_xs,
-                                struct Inter_t *ys) {
-    struct Inter_t *r = (struct Inter_t*)calloc(s->ordem, sizeof(struct Inter_t));
-    for (size_t i = 0; i < s->ordem; i++) {
+struct Inter_t *calcula_residuo(struct Sistema_t *s, size_t npts,
+                                struct Inter_t **pots_xs, struct Inter_t *ys) {
+    struct Inter_t *r = (struct Inter_t*)calloc(npts, sizeof(struct Inter_t));
+    for (size_t i = 0; i < npts; i++) {
         struct Inter_t res = ZERO_INTER;
         for (size_t j = 0; j < s->ordem; j++)
             res = soma_inter(res, mult_inter(s->X[j], pots_xs[i][j]));
