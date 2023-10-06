@@ -1,5 +1,28 @@
 Nomes: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 
-Limitações encontradas:
+# Limitações encontradas:
 
 Não encontramos casos nos quais o programa não funciona.
+
+# Módulos
+## intervalo
+    Composto pelos arquivos intervalo.h e intervalo.c, tem como responsabilidade
+prover as operações aritméticas intervalares, como:
+    * Soma
+    * Subtração
+    * Multiplicação
+    * Divisão
+    * Comparação
+    * Operador módulo
+
+## Sistema linear
+    Composto pelos arquivos sistema_linviear.h sistema_linviear.c, tem como
+responsabilidade gerenciar memória da etrutura do SL, e prover uma função para
+resolver o SL, sendo essa a função eliminação_gauss. Também prove duas funções
+para criação de matrizes de referência.
+
+## Ajuste polinomial
+    Composto pelos arquivos ajuste_polinomial.h ajuste_polinomial.c, tem como
+responsabilidade criar a tabela de potências, gerar o sistema linear de mínimos
+quadrados e calcular resíduo. Elas são as funções efetivamente usadas no programa
+principal.

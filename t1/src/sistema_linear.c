@@ -61,6 +61,7 @@ size_t find_max(struct Sistema_t *s, size_t linha_pivo) {
         return linha_pivo;          // linhas de baixo de linha_pivo
 
     for (size_t i = linha_pivo; i < s->ordem; i++) {
+        // if (|s->A[i][linha_pivo] > max|) then
         if (compara_inter(fabs_inter(s->A[i][linha_pivo]), max) == INTER_MAIOR ) {
             max = fabs_inter(s->A[i][linha_pivo]);
             id_max = i;

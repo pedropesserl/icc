@@ -28,6 +28,10 @@ debug: $(PROGRAM)
 $(PROGRAM): $(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)
 
+zip: purge
+	mkdir -p glc22-pfp22
+	cp $(SDIR)/* $(IDIR)/* LEIAME makefile glc22-pfp22
+
 clean:
 	rm -f $(OBJ)
 

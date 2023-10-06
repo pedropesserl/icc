@@ -10,9 +10,16 @@
     } while (0)
 
 
+// Estrutura que armazena as informações de um sistema linear:
+//  Ordem: ordem.
+//  Matriz de coeficientes: A.
+//  Vetor de termos independentes: B.
+//  Vetor de solução: X.
+// !! Atenção !!
+// O vetor data é que armazena os dados da matriz de coeficientes e vetor de
+// termos independentes, A e B são apenas referências para esses valores.
 struct Sistema_t {
     struct Inter_t *data;
-    // Todo o sistema, incluindo o termos independentes (B).
     struct Inter_t **A;
     struct Inter_t *B;
     struct Inter_t *X;
@@ -45,7 +52,8 @@ void imprime_solucao(struct Sistema_t *s);
 
 void imprime_sistema(struct Sistema_t *s);
 
-// Resolve o sistema pelo método da eliminação de Gauss com pivoteamento parcial.
+// Resolve o sistema pelo método da eliminação de Gauss,
+// pivoteamento parcial e com multiplicador.
 void eliminacao_gauss(struct Sistema_t *s);
 
 #endif // SISTEMA_LINEAR_H_

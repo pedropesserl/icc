@@ -52,13 +52,15 @@ struct Inter_t div_inter(struct Inter_t a, struct Inter_t b) {
 
 int compara_inter(struct Inter_t a, struct Inter_t b) {
     struct Inter_t cmp = sub_inter(a, b);
-    // 0 in a - b       => a = b
-    // (a - b).up < 0   => a < b
-    // (a - b).lo > 0   => a > b
+    // 0 in (a - b)     => a = b
     if (cmp.lo <= 0.0 && 0.0 <= cmp.up)
         return INTER_IGUAL;
+
+    // (a - b).up < 0   => a < b
     if (cmp.up < 0.0)
         return INTER_MENOR;
+
+    // (a - b).lo > 0   => a > b
     return INTER_MAIOR;
 }
 

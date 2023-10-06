@@ -12,6 +12,8 @@ int main(void) {
     LIKWID_MARKER_INIT;
 
     fesetround(FE_DOWNWARD);
+
+    // Inicializando pontos da curva
     size_t n, k;
     scanf("%ld %ld", &n, &k);
     struct Inter_t *xs = (struct Inter_t*)calloc(k, sizeof(struct Inter_t));
@@ -27,8 +29,10 @@ int main(void) {
         ys[i].lo = iny; ys[i].up = M(iny);
     }
 
+    // Criando SL e inicializando
     rtime_t t_gera_SL = timestamp();
     LIKWID_MARKER_START("Gera_SL");
+    // Tabela de potências utilizada na criação do SL e cálculo dos resíduos
     struct Inter_t **pots_xs = (struct Inter_t**)calloc(k, sizeof(struct Inter_t*));
     if (!pots_xs)
         MEM_ERR;
@@ -37,12 +41,14 @@ int main(void) {
     LIKWID_MARKER_STOP("Gera_SL");
     t_gera_SL = timestamp() - t_gera_SL;
 
+    // Resolvendo SL
     rtime_t t_solu_SL = timestamp();
     LIKWID_MARKER_START("Resolve_SL");
     eliminacao_gauss(&sistema);
     LIKWID_MARKER_STOP("Resolve_SL");
     t_solu_SL = timestamp() - t_solu_SL;
 
+    // Calculando resíduos
     struct Inter_t *residuos = calcula_residuo(&sistema, k, pots_xs, ys);
 
     for (size_t i = 0; i < n+1; i++)
@@ -55,6 +61,7 @@ int main(void) {
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);
 
+    // Liberando memória
     destroi_sistema(&sistema);
     free(pots_xs);
     free(data);
