@@ -1,10 +1,11 @@
-# Authos: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
+// Autores: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 #ifndef AJUSTE_POLINOMIAL_H_
 #define AJUSTE_POLINOMIAL_H_
 
 #include "sistema_linear.h"
 
-// Cria tabela de lookup para as potências de 0 a 2m de todos os xs (m = ordem - 1)
+// Cria tabela de lookup para as potências de 0 a 2m de todos os xs (m = grau_polinomio),
+// e armazena em pots_xs (espera-se que já esteja alocado).
 //
 // [ [    1,    x0,  x0^2, ..., x0^2m],
 //   [    1,    x1,  x1^2, ..., x1^2m],
@@ -13,8 +14,9 @@
 //   [    1,    xn,  xn^2, ..., xn^2m] ]
 //
 // Retorna vetor de dados alocado
-// !! A função caller deve liberar a memória !!
-struct Inter_t *tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs, struct Inter_t **pots_xs);
+// !! A função caller deve liberar a memória do vetor !!
+struct Inter_t *tabela_potencias_xs(size_t m, size_t npts,
+                                    struct Inter_t *xs, struct Inter_t **pots_xs);
 
 // Cria o sistema linear para o método dos Mínimos Quadrados
 // dada a tabela de pontos e a ordem do sistema (ordem = grau_polinomio + 1)

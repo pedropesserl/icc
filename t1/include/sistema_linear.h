@@ -1,4 +1,4 @@
-# Authos: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
+// Autores: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 #ifndef SISTEMA_LINEAR_H_
 #define SISTEMA_LINEAR_H_
 
@@ -9,6 +9,7 @@
         exit(1);                                                                                    \
     } while (0)
 
+
 struct Sistema_t {
     struct Inter_t *data;
     // Todo o sistema, incluindo o termos independentes (B).
@@ -18,11 +19,10 @@ struct Sistema_t {
     size_t ordem;
 };
 
-// Cria referência dos ponteiros de m ao vetor data, para uma matriz de
-// nlin linhas e ncol colunas.
+// Cria referência dos ponteiros de m ao vetor data, para uma matriz nlin*ncol.
 void cria_matriz(size_t nlin, size_t ncol, struct Inter_t **m, struct Inter_t *data);
 
-// Cria referência dos ponteiros de m ao vetor data, para uma matriz quadrada.
+// Cria referência dos ponteiros de m ao vetor data, para uma matriz tam*tam.
 void cria_matriz_quadrada(size_t tam, struct Inter_t **m, struct Inter_t *data);
 
 // Aloca memória para um sistema vazio
@@ -43,12 +43,9 @@ int troca_linha(struct Sistema_t *s, size_t linha1, size_t linha2);
 
 void imprime_solucao(struct Sistema_t *s);
 
-void imprime_residuo(struct Sistema_t *s);
-
 void imprime_sistema(struct Sistema_t *s);
 
 // Resolve o sistema pelo método da eliminação de Gauss com pivoteamento parcial.
-// Retorna 1 se conseguiu fazer a eliminação.
 void eliminacao_gauss(struct Sistema_t *s);
 
 #endif // SISTEMA_LINEAR_H_

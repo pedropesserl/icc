@@ -1,4 +1,4 @@
-# Authos: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
+// Autores: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -38,4 +38,3 @@ string_t markerName(string_t baseName, int n)
   return mark;
 
 }
-

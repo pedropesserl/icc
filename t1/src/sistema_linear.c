@@ -1,4 +1,4 @@
-# Authos: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
+// Autores: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,14 +70,13 @@ size_t find_max(struct Sistema_t *s, size_t linha_pivo) {
     return id_max;
 }
 
-// retorna 1 se tudo ocorrer corretamente
 int troca_linha(struct Sistema_t *s, size_t linha1, size_t linha2) {
     struct Inter_t *tmp;
 
     if (!s || linha1 > s->ordem || linha2 > s->ordem)
         return 0;
     
-    if (linha1 == linha2) // nao trocar se for a memsa linha
+    if (linha1 == linha2) // não trocar se for a mesma linha
         return 1;
 
     tmp = s->A[linha1];
