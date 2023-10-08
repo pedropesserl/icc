@@ -31,7 +31,7 @@ $(PROGRAM): $(OBJ)
 
 zip: purge
 	mkdir -p ../$(LOGINS)
-	cp -r -t ../$(LOGINS) $(SDIR) $(IDIR) LEIAME makefile likwid.sh
+	cp -r -t ../$(LOGINS) $(SDIR) $(IDIR) LEIAME makefile script.sh
 	tar -czvf $(LOGINS).tar.gz ../$(LOGINS)
 	rm -r ../$(LOGINS)
 

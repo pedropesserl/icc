@@ -16,9 +16,9 @@ prover as operações aritméticas intervalares, como:
     * Operador módulo
 
 ## Sistema linear
-    Composto pelos arquivos sistema_linviear.h sistema_linviear.c, tem como
-responsabilidade gerenciar memória da etrutura do SL, e prover uma função para
-resolver o SL, sendo essa a função eliminação_gauss. Também prove duas funções
+    Composto pelos arquivos sistema_linear.h sistema_linear.c, tem como
+responsabilidade gerenciar memória da estrutura do SL, e prover uma função para
+resolver o SL, sendo essa a função eliminacao_gauss. Também provê duas funções
 para criação de matrizes de referência.
 
 ## Ajuste polinomial
@@ -27,5 +27,5 @@ responsabilidade criar a tabela de potências, gerar o sistema linear de mínimo
 quadrados e calcular resíduo. Elas são as funções efetivamente usadas no programa
 principal.
 
-# Como executar
+# Como executar o script
 script.sh <arq_teste> > <arq_saida>
