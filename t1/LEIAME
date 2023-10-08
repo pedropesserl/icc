@@ -26,3 +26,6 @@ para criação de matrizes de referência.
 responsabilidade criar a tabela de potências, gerar o sistema linear de mínimos
 quadrados e calcular resíduo. Elas são as funções efetivamente usadas no programa
 principal.
+
+# Como executar
+script.sh <arq_teste> > <arq_saida>
