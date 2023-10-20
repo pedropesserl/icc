@@ -16,8 +16,6 @@ static void usage(char *progname) {
     exit(1);
 }
 
-
-
 /**
  * Programa principal
  * Forma de uso: matmult [ -n <ordem> ]
