@@ -9,8 +9,8 @@
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
 #define isPot2(n) (n && !(n & (n - 1)))
 
-#define UF  4
-#define BLK 8
+#define UF  2
+#define BLK 4
 /* Tipos para matrizes e vetores */
 
 typedef double real_t;
@@ -26,6 +26,8 @@ Vetor geraVetor (int n, int zerar);
 void liberaVetor (void *vet);
 
 void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res);
+void multMatVet_otimizado(MatRow mat, Vetor v, int m, int n, Vetor res);
+
 void multMatMat(MatRow A, MatRow B, int n, MatRow C);
 
 void prnMat (MatRow mat, int m, int n);

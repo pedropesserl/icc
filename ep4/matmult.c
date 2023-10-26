@@ -58,21 +58,21 @@ int main (int argc, char *argv[]) {
         exit(2);
     }
 
-#ifdef _DEBUG_
-    prnMat (mRow_1, n, n);
-    prnMat (mRow_2, n, n);
-    prnVetor (vet, n);
-    printf ("=================================\n\n");
-#endif /* _DEBUG_ */
-
-    multMatVet (mRow_1, vet, n, n, res);
-
-    multMatMat (mRow_1, mRow_2, n, resMat);
+    multMatVet_otimizado(mRow_1, vet, n, n, res);
+    // multMatMat(mRow_1, mRow_2, n, resMat);
 
 #ifdef _DEBUG_
-    prnVetor (res, n);
-    prnMat (resMat, n, n);
-#endif /* _DEBUG_ */
+    // printf("Sem otimização\n");
+    prnVetor(res, n);
+#endif 
+
+    memset(res,0,n*sizeof(real_t));
+    multMatVet(mRow_1, vet, n, n, res);
+
+#ifdef _DEBUG_
+    // printf("Com otimização\n");
+    prnVetor(res, n);
+#endif 
 
     liberaVetor ((void*) mRow_1);
     liberaVetor ((void*) mRow_2);

@@ -105,7 +105,14 @@ void liberaVetor (void *vet) {
  *
  */
 
-void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res) {
+void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res) {
+    if (res) {
+        for (int i = 0; i < m; ++i)
+            for (int j = 0; j < n; ++j)
+                res[i] += mat[i*n + j] * v[j];
+    }
+}
+void multMatVet_otimizado(MatRow mat, Vetor v, int m, int n, Vetor res) {
     int istart, iend, jstart, jend;
     if (res) {
         for (int ii = 0; ii < m/BLK; ii++) {
@@ -115,9 +122,10 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res) {
                 // Unroll and Jam
                 for (int i=istart; i < iend; i+=UF) {
                     for (int j=jstart; j < jend; ++j) {
-                        // printf("%d %c\n", i+1, 'A'+j);
-                        for (int u=0; u < UF; u++)
+                        for (int u=0; u < UF; u++){
+                            // printf("%d %c\n", i+u+1, 'A'+j);
                             res[i+u] += mat[n*(i+u) + j] * v[j];
+                        }
                         // res[i+0] += mat[n*(i+0) + j] * v[j];
                         // res[i+1] += mat[n*(i+1) + j] * v[j];
                         // res[i+2] += mat[n*(i+2) + j] * v[j];
@@ -132,9 +140,10 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res) {
         if (m%BLK != 0){
             for (int i=0; i < m-m%BLK; i+=UF){
                 for (int j=n-n%BLK; j < n; j++){
-                    // printf("%d %c\n", i+1, 'A'+j);
-                    for (int u=0; u < UF; u++)
+                    for (int u=0; u < UF; u++){
+                        // printf("%d %c\n", i+u+1, 'A'+j);
                         res[i+u] += mat[n*(i+u) + j] * v[j];
+                    }
                     // res[i+0] += mat[n*(i+0) + j] * v[j];
                     // res[i+1] += mat[n*(i+1) + j] * v[j];
                     // res[i+2] += mat[n*(i+2) + j] * v[j];
@@ -148,9 +157,10 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res) {
         if (n%BLK != 0){
             for (int i=m-m%BLK; i < m-m%UF; i+=UF){
                 for (int j=0; j < n; j++){
-                    // printf("%d %c\n", i+1, 'A'+j);
-                    for (int u=0; u < UF; u++)
+                    for (int u=0; u < UF; u++){
+                        // printf("%d %c\n", i+u+1, 'A'+j);
                         res[i+u] += mat[n*(i+u) + j] * v[j];
+                    }
                     // res[i+0] += mat[n*(i+0) + j] * v[j];
                     // res[i+1] += mat[n*(i+1) + j] * v[j];
                     // res[i+2] += mat[n*(i+2) + j] * v[j];

@@ -3,7 +3,7 @@ CFILES = $(wildcard *.c)
 OBJS = $(CFILES:%.c=%.o)
 
 CC = gcc
-CFLAGS = -Wall -O3
+CFLAGS = -Wall
 LFLAGS = -lm
 DISTFILES = *.c *.h README.md Makefile perfctr
 DISTDIR = glc22-pfp22
