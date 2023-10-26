@@ -203,6 +203,23 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C) {
                 C[i*n+j] += A[i*n+k] * B[k*n+j];
 }
 
+void multMatMat_otimizado(MatRow A, MatRow B, int n, MatRow C) {
+    int istart, iend, jstart, jend, kstart, kend;
+    for (int ii=0; ii < n/BLK; ++ii) {
+        istart = ii*BLK; iend=istart+BLK;
+        for (int jj=0; jj < n/BLK; ++jj) {
+            jstart = jj*BLK; jend=jstart+BLK;
+            for (int kk=0; kk < n/BLK; ++kk) {
+                kstart = kk*BLK; kend=kstart+BLK;
+                for (int i=istart; i < iend; ++i)
+                    for (int j=jstart; j < jend; j+=UF)
+                        for (int k=kstart; k < kend; ++k)
+                            for (int u=0; u < UF; u++)
+                                C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
+            }
+        }
+}
+
 
 /**
  *  Funcao prnMat:  Imprime o conteudo de uma matriz em stdout
