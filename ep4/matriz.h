@@ -6,9 +6,11 @@
 #define DEF_SIZE 128
 #define BASE 32
 
-
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
+#define isPot2(n) (n && !(n & (n - 1)))
 
+#define UF  4
+#define BLK 8
 /* Tipos para matrizes e vetores */
 
 typedef double real_t;
