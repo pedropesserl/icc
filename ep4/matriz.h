@@ -9,7 +9,7 @@
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
 #define isPot2(n) (n && !(n & (n - 1)))
 
-#define UF  2
+#define UF  4
 #define BLK 4
 /* Tipos para matrizes e vetores */
 

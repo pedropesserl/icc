@@ -2,23 +2,25 @@
 
 # Forma de uso:
 #
-#         perfctr <CORE_ID> <GRUPO_PERFORMANCE> ./matmult <opcoe_matmult>
+#         perfctr <GRUPO_PERFORMANCE> ./matmult <opcoe_matmult>
 #
 # Exemplo, para fazer as medições de performance de FLOPS_DP no core 3
 #
 #         perfctr FLOPS_DP ./matmult 64
 #
 
-LIKWID_CMD="likwid-perfctr -C 3 -g $1 -m"
+CPU="3"
+LIKWID_CMD="likwid-perfctr -C $CPU -g $1 -m"
 shift 1
 
-sudo echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
+echo "performance" > /sys/devices/system/cpu/cpufreq/policy$CPU/scaling_governor
 
-make purge matmult
+make purge
+make
 
 ${LIKWID_CMD} $*
 
-sudo echo "powersave" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
+echo "powersave" > /sys/devices/system/cpu/cpufreq/policy$CPU/scaling_governor
 
 # Para obter topologia dos cpu's
 #      likwid-topology -c -g

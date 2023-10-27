@@ -126,63 +126,18 @@ void multMatVet_otimizado(MatRow mat, Vetor v, int m, int n, Vetor res) {
             // Unroll and Jam
             for (int i=istart; i < iend; i+=UF) {
                 for (int j=jstart; j < jend; ++j) {
-                    for (int u=0; u < UF; u++){
-                        // printf("%d %c\n", i+u+1, 'A'+j);
-                        res[i+u] += mat[n*(i+u) + j] * v[j];
-                    }
-                    // res[i+0] += mat[n*(i+0) + j] * v[j];
-                    // res[i+1] += mat[n*(i+1) + j] * v[j];
-                    // res[i+2] += mat[n*(i+2) + j] * v[j];
-                    // res[i+3] += mat[n*(i+3) + j] * v[j];        
+                    // for (int u=0; u < UF; u++){
+                    //     // printf("%d %c\n", i+u+1, 'A'+j);
+                    //     res[i+u] += mat[n*(i+u) + j] * v[j];
+                    // }
+                    res[i+0] += mat[n*(i+0) + j] * v[j];
+                    res[i+1] += mat[n*(i+1) + j] * v[j];
+                    res[i+2] += mat[n*(i+2) + j] * v[j];
+                    res[i+3] += mat[n*(i+3) + j] * v[j];        
                 }
             }
         }
     }
-
-    // Remainder Cols of Blocking and Unroll and Jam. Use Unroll and Jam
-    // Only if have remainder cols
-    if (m%BLK != 0){
-        for (int i=0; i < m-m%BLK; i+=UF){
-            for (int j=n-n%BLK; j < n; j++){
-                for (int u=0; u < UF; u++){
-                    // printf("%d %c\n", i+u+1, 'A'+j);
-                    res[i+u] += mat[n*(i+u) + j] * v[j];
-                }
-                // res[i+0] += mat[n*(i+0) + j] * v[j];
-                // res[i+1] += mat[n*(i+1) + j] * v[j];
-                // res[i+2] += mat[n*(i+2) + j] * v[j];
-                // res[i+3] += mat[n*(i+3) + j] * v[j];        
-            }
-        }
-    } // end if(m%BLK)
-
-    // Remainder Rows of Blocking and Unroll and Jam. Use Unroll and Jam
-    // Only if have remainder rows
-    if (n%BLK != 0){
-        for (int i=m-m%BLK; i < m-m%UF; i+=UF){
-            for (int j=0; j < n; j++){
-                for (int u=0; u < UF; u++){
-                    // printf("%d %c\n", i+u+1, 'A'+j);
-                    res[i+u] += mat[n*(i+u) + j] * v[j];
-                }
-                // res[i+0] += mat[n*(i+0) + j] * v[j];
-                // res[i+1] += mat[n*(i+1) + j] * v[j];
-                // res[i+2] += mat[n*(i+2) + j] * v[j];
-                // res[i+3] += mat[n*(i+3) + j] * v[j];        
-            }
-        }
-    } // end if(n%BLK)
-
-    // Remainder loop of Unroll and Jam
-    // only if have remainder
-    if (n%UF != 0){
-        for (int i=m-m%UF; i < m; ++i) {
-            for (int j=0; j < n; ++j) {
-                // printf("%d %c\n", i+1, 'A'+j);
-                res[i] += mat[n*i + j] * v[j];
-            }
-        }
-    } // end if(n%UF)
 }
 
 
@@ -224,6 +179,7 @@ void multMatMat_otimizado(MatRow A, MatRow B, int n, MatRow C) {
                                 C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
             }
         }
+    }
 }
 
 

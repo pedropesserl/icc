@@ -10,6 +10,8 @@ DISTDIR = glc22-pfp22
 
 .PHONY: all debug clean purge dist
 
+all: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx2 -march=native -O3
+all: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
 all: $(PROG)
 
 $(PROG).o: $(PROG).c
