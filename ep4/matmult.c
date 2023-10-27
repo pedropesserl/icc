@@ -40,11 +40,11 @@ int main (int argc, char *argv[]) {
 
     srandom(20232);
 
-    res = geraVetor (n, 0); // (real_t *) malloc (n*sizeof(real_t));
+    res = geraVetor(n, 1); // (real_t *) malloc (n*sizeof(real_t));
     resMat = geraMatRow(n, n, 1);
 
-    mRow_1 = geraMatRow (n, n, 0);
-    mRow_2 = geraMatRow (n, n, 0);
+    mRow_1 = geraMatRow(n, n, 0);
+    mRow_2 = geraMatRow(n, n, 0);
 
     vet = geraVetor (n, 0);
 
@@ -54,7 +54,7 @@ int main (int argc, char *argv[]) {
         liberaVetor ((void*) mRow_2);
         liberaVetor ((void*) resMat);
         liberaVetor ((void*) vet);
-        liberaVetor ((void*) res);
+        liberaVetor ((void*) resk);
         exit(2);
     }
 

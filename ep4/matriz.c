@@ -89,6 +89,8 @@ Vetor geraVetor (int n, int zerar) {
  *
  */
 void liberaVetor (void *vet) {
+    if (!vet)
+        return;
     free(vet);
 }
 
@@ -114,73 +116,73 @@ void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res) {
 }
 void multMatVet_otimizado(MatRow mat, Vetor v, int m, int n, Vetor res) {
     int istart, iend, jstart, jend;
-    if (res) {
-        for (int ii = 0; ii < m/BLK; ii++) {
-            istart = ii*BLK; iend = istart+BLK;
-            for (int jj = 0; jj < n/BLK; jj++) {
-                jstart = jj*BLK; jend = jstart+BLK;
-                // Unroll and Jam
-                for (int i=istart; i < iend; i+=UF) {
-                    for (int j=jstart; j < jend; ++j) {
-                        for (int u=0; u < UF; u++){
-                            // printf("%d %c\n", i+u+1, 'A'+j);
-                            res[i+u] += mat[n*(i+u) + j] * v[j];
-                        }
-                        // res[i+0] += mat[n*(i+0) + j] * v[j];
-                        // res[i+1] += mat[n*(i+1) + j] * v[j];
-                        // res[i+2] += mat[n*(i+2) + j] * v[j];
-                        // res[i+3] += mat[n*(i+3) + j] * v[j];        
+    if (!res)
+        return;
+
+    for (int ii = 0; ii < m/BLK; ii++) {
+        istart = ii*BLK; iend = istart+BLK;
+        for (int jj = 0; jj < n/BLK; jj++) {
+            jstart = jj*BLK; jend = jstart+BLK;
+            // Unroll and Jam
+            for (int i=istart; i < iend; i+=UF) {
+                for (int j=jstart; j < jend; ++j) {
+                    for (int u=0; u < UF; u++){
+                        // printf("%d %c\n", i+u+1, 'A'+j);
+                        res[i+u] += mat[n*(i+u) + j] * v[j];
                     }
+                    // res[i+0] += mat[n*(i+0) + j] * v[j];
+                    // res[i+1] += mat[n*(i+1) + j] * v[j];
+                    // res[i+2] += mat[n*(i+2) + j] * v[j];
+                    // res[i+3] += mat[n*(i+3) + j] * v[j];        
                 }
             }
         }
+    }
 
-        // Remainder Cols of Blocking and Unroll and Jam. Use Unroll and Jam
-        // Only if have remainder cols
-        if (m%BLK != 0){
-            for (int i=0; i < m-m%BLK; i+=UF){
-                for (int j=n-n%BLK; j < n; j++){
-                    for (int u=0; u < UF; u++){
-                        // printf("%d %c\n", i+u+1, 'A'+j);
-                        res[i+u] += mat[n*(i+u) + j] * v[j];
-                    }
-                    // res[i+0] += mat[n*(i+0) + j] * v[j];
-                    // res[i+1] += mat[n*(i+1) + j] * v[j];
-                    // res[i+2] += mat[n*(i+2) + j] * v[j];
-                    // res[i+3] += mat[n*(i+3) + j] * v[j];        
+    // Remainder Cols of Blocking and Unroll and Jam. Use Unroll and Jam
+    // Only if have remainder cols
+    if (m%BLK != 0){
+        for (int i=0; i < m-m%BLK; i+=UF){
+            for (int j=n-n%BLK; j < n; j++){
+                for (int u=0; u < UF; u++){
+                    // printf("%d %c\n", i+u+1, 'A'+j);
+                    res[i+u] += mat[n*(i+u) + j] * v[j];
                 }
+                // res[i+0] += mat[n*(i+0) + j] * v[j];
+                // res[i+1] += mat[n*(i+1) + j] * v[j];
+                // res[i+2] += mat[n*(i+2) + j] * v[j];
+                // res[i+3] += mat[n*(i+3) + j] * v[j];        
             }
-        } // end if(m%BLK)
+        }
+    } // end if(m%BLK)
 
-        // Remainder Rows of Blocking and Unroll and Jam. Use Unroll and Jam
-        // Only if have remainder rows
-        if (n%BLK != 0){
-            for (int i=m-m%BLK; i < m-m%UF; i+=UF){
-                for (int j=0; j < n; j++){
-                    for (int u=0; u < UF; u++){
-                        // printf("%d %c\n", i+u+1, 'A'+j);
-                        res[i+u] += mat[n*(i+u) + j] * v[j];
-                    }
-                    // res[i+0] += mat[n*(i+0) + j] * v[j];
-                    // res[i+1] += mat[n*(i+1) + j] * v[j];
-                    // res[i+2] += mat[n*(i+2) + j] * v[j];
-                    // res[i+3] += mat[n*(i+3) + j] * v[j];        
+    // Remainder Rows of Blocking and Unroll and Jam. Use Unroll and Jam
+    // Only if have remainder rows
+    if (n%BLK != 0){
+        for (int i=m-m%BLK; i < m-m%UF; i+=UF){
+            for (int j=0; j < n; j++){
+                for (int u=0; u < UF; u++){
+                    // printf("%d %c\n", i+u+1, 'A'+j);
+                    res[i+u] += mat[n*(i+u) + j] * v[j];
                 }
+                // res[i+0] += mat[n*(i+0) + j] * v[j];
+                // res[i+1] += mat[n*(i+1) + j] * v[j];
+                // res[i+2] += mat[n*(i+2) + j] * v[j];
+                // res[i+3] += mat[n*(i+3) + j] * v[j];        
             }
-        } // end if(n%BLK)
+        }
+    } // end if(n%BLK)
 
-        // Remainder loop of Unroll and Jam
-        // only if have remainder
-        if (n%UF != 0){
-            for (int i=m-m%UF; i < m; ++i) {
-                for (int j=0; j < n; ++j) {
-                    // printf("%d %c\n", i+1, 'A'+j);
-                    res[i] += mat[n*i + j] * v[j];
-                }
+    // Remainder loop of Unroll and Jam
+    // only if have remainder
+    if (n%UF != 0){
+        for (int i=m-m%UF; i < m; ++i) {
+            for (int j=0; j < n; ++j) {
+                // printf("%d %c\n", i+1, 'A'+j);
+                res[i] += mat[n*i + j] * v[j];
             }
-        } // end if(n%UF)
-
-    } // end if(res)
+        }
+    } // end if(n%UF)
 }
 
 
@@ -189,7 +191,7 @@ void multMatVet_otimizado(MatRow mat, Vetor v, int m, int n, Vetor res) {
  *  @param A matriz 'n x n'
  *  @param B matriz 'n x n'
  *  @param n ordem da matriz quadrada
- *  @param C   matriz que guarda o resultado. Deve ser previamente gerada com 'geraMatPtr()'
+ *  @param C   matriz que guarda o resultado. Deve ser previamente gerada com 'geraMatRow()'
  *             e com seus elementos inicializados em 0.0 (zero)
  *
  */
@@ -205,12 +207,16 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C) {
 
 void multMatMat_otimizado(MatRow A, MatRow B, int n, MatRow C) {
     int istart, iend, jstart, jend, kstart, kend;
+
     for (int ii=0; ii < n/BLK; ++ii) {
-        istart = ii*BLK; iend=istart+BLK;
+        istart = ii*BLK; iend = istart+BLK;
+
         for (int jj=0; jj < n/BLK; ++jj) {
-            jstart = jj*BLK; jend=jstart+BLK;
+            jstart = jj*BLK; jend = jstart+BLK;
+
             for (int kk=0; kk < n/BLK; ++kk) {
-                kstart = kk*BLK; kend=kstart+BLK;
+                kstart = kk*BLK; kend = kstart+BLK;
+
                 for (int i=istart; i < iend; ++i)
                     for (int j=jstart; j < jend; j+=UF)
                         for (int k=kstart; k < kend; ++k)
