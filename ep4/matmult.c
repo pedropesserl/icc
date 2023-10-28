@@ -6,6 +6,7 @@
 #include <likwid.h>
 
 #include "matriz.h"
+#include "utils.h"
 
 /**
  * Exibe mensagem de erro indicando forma de uso do programa e termina
@@ -59,41 +60,48 @@ int main (int argc, char *argv[]) {
         liberaVetor ((void*) res);
         exit(2);
     }
+    
+    rtime_t t_matvet = timestamp();
     LIKWID_MARKER_START("MatVet");
     multMatVet(mRow_1, vet, n, n, res);
     LIKWID_MARKER_STOP("MatVet");
+    t_matvet = timestamp() - t_matvet;
 
+    rtime_t t_matmat = timestamp();
     LIKWID_MARKER_START("MatMat");
     multMatMat(mRow_1, mRow_2, n, resMat);
     LIKWID_MARKER_STOP("MatMat");
-#ifdef _DEBUG_1
-    printf("Sem otimização\n");
-    // prnVetor(res, n);
-    prnMat(resMat, n, n);
-#endif 
+    t_matmat = timestamp() - t_matmat;
 
     // Zerando resMat e res
     memset(res,0,n*sizeof(real_t));
     memset(resMat,0,n*(n+isPot2(n))*sizeof(real_t));
 
+    rtime_t t_matvet_o = timestamp();
     LIKWID_MARKER_START("MatVet_otm");
     multMatVet_otimizado(mRow_1, vet, n, n, res);
     LIKWID_MARKER_STOP("MatVet_otm");
+    t_matvet_o = timestamp() - t_matvet_o;
 
+    rtime_t t_matmat_o = timestamp();
     LIKWID_MARKER_START("MatMat_otm");
     multMatMat_otimizado(mRow_1, mRow_2, n, resMat);
     LIKWID_MARKER_STOP("MatMat_otm");
-#ifdef _DEBUG_2
-    printf("Com otimização\n");
-    // prnVetor(res, n);
-    prnMat(resMat, n, n);
+    t_matmat_o = timestamp() - t_matmat_o;
+    // multMatMat(mRow_1, mRow_2, n, resMat);
+
+#ifdef PRINT_TEMPOS
+     printf("%15.10lg\n", t_matvet);
+     printf("%15.10lg\n", t_matmat);
+     printf("%15.10lg\n", t_matvet_o);
+     printf("%15.10lg\n", t_matmat_o);
 #endif 
 
-    liberaVetor ((void*) mRow_1);
-    liberaVetor ((void*) mRow_2);
-    liberaVetor ((void*) resMat);
-    liberaVetor ((void*) vet);
-    liberaVetor ((void*) res);
+    liberaVetor ((void*)mRow_1);
+    liberaVetor ((void*)mRow_2);
+    liberaVetor ((void*)resMat);
+    liberaVetor ((void*)vet);
+    liberaVetor ((void*)res);
 
     LIKWID_MARKER_CLOSE;
     return 0;
