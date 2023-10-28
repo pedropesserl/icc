@@ -59,10 +59,24 @@ int main (int argc, char *argv[]) {
         liberaVetor ((void*) res);
         exit(2);
     }
+    LIKWID_MARKER_START("MatVet");
+    multMatVet(mRow_1, vet, n, n, res);
+    LIKWID_MARKER_STOP("MatVet");
+
+    LIKWID_MARKER_START("MatMat");
+    multMatMat(mRow_1, mRow_2, n, resMat);
+    LIKWID_MARKER_STOP("MatMat");
+
+    memset(res,0,n*sizeof(real_t));
+    memset(resMat,0,n*(n+isPot2(n))*sizeof(real_t));
 
     LIKWID_MARKER_START("MatVet_otm");
     multMatVet_otimizado(mRow_1, vet, n, n, res);
     LIKWID_MARKER_STOP("MatVet_otm");
+
+    LIKWID_MARKER_START("MatMat_otm");
+    multMatMat_otimizado(mRow_1, mRow_2, n, resMat);
+    LIKWID_MARKER_STOP("MatMat_otm");
     // multMatMat(mRow_1, mRow_2, n, resMat);
 
 #ifdef _DEBUG_
@@ -70,10 +84,6 @@ int main (int argc, char *argv[]) {
     prnVetor(res, n);
 #endif 
 
-    memset(res,0,n*sizeof(real_t));
-    LIKWID_MARKER_START("MatVet");
-    multMatVet(mRow_1, vet, n, n, res);
-    LIKWID_MARKER_STOP("MatVet");
 
 #ifdef _DEBUG_
     // printf("Com otimização\n");

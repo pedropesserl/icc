@@ -174,9 +174,14 @@ void multMatMat_otimizado(MatRow A, MatRow B, int n, MatRow C) {
 
                 for (int i=istart; i < iend; ++i)
                     for (int j=jstart; j < jend; j+=UF)
-                        for (int k=kstart; k < kend; ++k)
-                            for (int u=0; u < UF; u++)
-                                C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
+                        for (int k=kstart; k < kend; ++k){
+                                C[i*n+j+0] += A[i*n+k] * B[k*n+j+0];
+                                C[i*n+j+1] += A[i*n+k] * B[k*n+j+1];
+                                C[i*n+j+2] += A[i*n+k] * B[k*n+j+2];
+                                C[i*n+j+3] += A[i*n+k] * B[k*n+j+3];
+                        }
+                            // for (int u=0; u < UF; u++)
+                            //     C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
             }
         }
     }
