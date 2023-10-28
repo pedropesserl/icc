@@ -114,7 +114,7 @@ void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res) {
                 res[i] += mat[i*n + j] * v[j];
     }
 }
-void multMatVet_otimizado(MatRow mat, Vetor v, int m, int n, Vetor res) {
+void multMatVet_otimizado(MatRow __restrict__ mat, Vetor __restrict__ v, int m, int n, Vetor __restrict__ res) {
     int istart, iend, jstart, jend;
     if (!res)
         return;
@@ -126,14 +126,14 @@ void multMatVet_otimizado(MatRow mat, Vetor v, int m, int n, Vetor res) {
             // Unroll and Jam
             for (int i=istart; i < iend; i+=UF) {
                 for (int j=jstart; j < jend; ++j) {
-                    // for (int u=0; u < UF; u++){
-                    //     // printf("%d %c\n", i+u+1, 'A'+j);
-                    //     res[i+u] += mat[n*(i+u) + j] * v[j];
-                    // }
-                    res[i+0] += mat[n*(i+0) + j] * v[j];
-                    res[i+1] += mat[n*(i+1) + j] * v[j];
-                    res[i+2] += mat[n*(i+2) + j] * v[j];
-                    res[i+3] += mat[n*(i+3) + j] * v[j];        
+                    for (int u=0; u < UF; u++){
+                        // printf("%d %c\n", i+u+1, 'A'+j);
+                        res[i+u] += mat[n*(i+u) + j] * v[j];
+                    }
+                    // res[i+0] += mat[n*(i+0) + j] * v[j];
+                    // res[i+1] += mat[n*(i+1) + j] * v[j];
+                    // res[i+2] += mat[n*(i+2) + j] * v[j];
+                    // res[i+3] += mat[n*(i+3) + j] * v[j];        
                 }
             }
         }
@@ -160,7 +160,7 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C) {
                 C[i*n+j] += A[i*n+k] * B[k*n+j];
 }
 
-void multMatMat_otimizado(MatRow A, MatRow B, int n, MatRow C) {
+void multMatMat_otimizado(MatRow __restrict__ A, MatRow __restrict__ B, int n, MatRow __restrict__ C) {
     int istart, iend, jstart, jend, kstart, kend;
 
     for (int ii=0; ii < n/BLK; ++ii) {
@@ -175,13 +175,13 @@ void multMatMat_otimizado(MatRow A, MatRow B, int n, MatRow C) {
                 for (int i=istart; i < iend; ++i)
                     for (int j=jstart; j < jend; j+=UF)
                         for (int k=kstart; k < kend; ++k){
-                                C[i*n+j+0] += A[i*n+k] * B[k*n+j+0];
-                                C[i*n+j+1] += A[i*n+k] * B[k*n+j+1];
-                                C[i*n+j+2] += A[i*n+k] * B[k*n+j+2];
-                                C[i*n+j+3] += A[i*n+k] * B[k*n+j+3];
+                            for (int u=0; u < UF; u++)
+                                C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
+                            // C[i*n+j+0] += A[i*n+k] * B[k*n+j+0];
+                            // C[i*n+j+1] += A[i*n+k] * B[k*n+j+1];
+                            // C[i*n+j+2] += A[i*n+k] * B[k*n+j+2];
+                            // C[i*n+j+3] += A[i*n+k] * B[k*n+j+3];
                         }
-                            // for (int u=0; u < UF; u++)
-                            //     C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
             }
         }
     }
