@@ -114,6 +114,7 @@ void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res) {
                 res[i] += mat[i*n + j] * v[j];
     }
 }
+
 void multMatVet_otimizado(MatRow __restrict__ mat, Vetor __restrict__ v, int m, int n, Vetor __restrict__ res) {
     int istart, iend, jstart, jend;
     if (!res)
@@ -138,6 +139,28 @@ void multMatVet_otimizado(MatRow __restrict__ mat, Vetor __restrict__ v, int m, 
             }
         }
     }
+
+    if (m%BLK != 0){
+        for (int i=0; i < m-m%BLK; i+=UF){
+            for (int j=n-n%BLK; j < n; j++){
+                for (int u=0; u < UF; u++){
+                    // printf("%d %c\n", i+u+1, 'A'+j);
+                    res[i+u] += mat[n*(i+u) + j] * v[j];
+                }
+            }
+        }
+    } // end if(m%BLK)
+
+    if (n%BLK != 0){
+        for (int i=m-m%BLK; i < m-m%UF; i+=UF){
+            for (int j=0; j < n; j++){
+                for (int u=0; u < UF; u++){
+                    // printf("%d %c\n", i+u+1, 'A'+j);
+                    res[i+u] += mat[n*(i+u) + j] * v[j];
+                }
+            }
+        }
+    } // end if(n%BLK)
 }
 
 
@@ -182,6 +205,38 @@ void multMatMat_otimizado(MatRow __restrict__ A, MatRow __restrict__ B, int n, M
                             // C[i*n+j+2] += A[i*n+k] * B[k*n+j+2];
                             // C[i*n+j+3] += A[i*n+k] * B[k*n+j+3];
                         }
+            }
+        }
+    }
+
+    if (n%BLK != 0) {
+        for (int i = 0; i < n; i++) {
+            for (int j = n-n%BLK; j < n; j+=UF) {
+                for (int k = 0; k < n; k++) {
+                    for (int u = 0; u < UF; u++) {
+                        C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < n-n%BLK; i++) {
+            for (int j = 0; j < n; j+=UF) {
+                for (int k = n-n%BLK; k < n; k++) {
+                    for (int u = 0; u < UF; u++) {
+                        C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
+                    }
+                }
+            }
+        }
+
+        for (int i = n-n%BLK; i < n; i++) {
+            for (int j = 0; j < n; j+=UF) {
+                for (int k = 0; k < n; k++) {
+                    for (int u = 0; u < UF; u++) {
+                        C[i*n+j+u] += A[i*n+k] * B[k*n+j+u];
+                    }
+                }
             }
         }
     }

@@ -20,8 +20,11 @@ $(PROG).o: $(PROG).c
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $<
 
-debug: CFLAGS += -g -D_DEBUG_
-debug: $(PROG)
+debug1: CFLAGS += -g -D_DEBUG_1
+debug1: $(PROG)
+
+debug2: CFLAGS += -g -D_DEBUG_2
+debug2: $(PROG)
 
 $(PROG): $(OBJS) 
 	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
