@@ -1,14 +1,20 @@
 Nomes: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 
-Limitações encontradas:
+Modo de uso:
+$ ./graficos.sh
+    - compila o programa matmult
+    - realiza testes usando a ferramenta Likwid
+    - armazena esses testes no diretório ./resultados/likwid-logs
+    - formata dados provenientes do teste e armazena em ./resultados/dados
+    - a partir dos dados formatados, gera gráficos usando gnuplot e armazena
+      em ./resultados/graficos no formato png
 
+Limitações encontradas:
 Não encontramos casos nos quais o programa não funciona.
 
 Otimizações realizadas:
 - Unroll & jam
 - Blocking
-
-
 
 Arquitetura do processador utilizado nos testes (máquina h10 do DINF):
 --------------------------------------------------------------------------------
