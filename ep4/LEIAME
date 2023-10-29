@@ -10,7 +10,9 @@ $ ./graficos.sh
       em ./resultados/graficos no formato png
 
 Limitações encontradas:
-Não encontramos casos nos quais o programa não funciona.
+O programa não realiza todas as operações aritméticas quando a entrada não é
+multipla de UF. Porém as entradas de teste eram todas multiplas de UF/4.
+    Entradas de teste: 64, 100, 128, 200, 256, 512, 600, 900, 1024, 2000, 2048, 3000, 4000.
 
 Otimizações realizadas:
 - Unroll & jam
