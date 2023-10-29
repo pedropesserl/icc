@@ -130,7 +130,7 @@ void eliminacao_gauss(struct Sistema_t *s) {
         for (size_t k = i+1; k < s->ordem; k++) {
             m = div_inter(s->A[k][i], s->A[i][i]);
             s->A[k][i] = ZERO_INTER;
-            for (size_t j = i+1; j < s->ordem; j++ )
+            for (size_t j = i+1; j < s->ordem; j++)
                 s->A[k][j] = sub_inter(s->A[k][j], mult_inter(s->A[i][j], m));
 
             s->B[k] = sub_inter(s->B[k], mult_inter(s->B[i], m));
