@@ -1,11 +1,16 @@
 PROG = matmult
 CFILES = $(wildcard *.c)
-OBJS = $(CFILES:%.c=%.o)
+_OBJ = $(CFILES:%.c=%.o)
+_DEPS = $(wildcard *.h)
+SDIR = src
+IDIR = include
+OBJ = $(_OBJ:%=$(SDIR)/%)
+DEPS = $(_DEPS:%=$(IDIR)/%)
 
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Iinclude -Wall -Wextra
 LFLAGS = -lm
-DISTFILES = *.c *.h README.md Makefile perfctr
+DISTFILES = *.c *.h README.md Makefile perfctr graficos.sh
 DISTDIR = glc22-pfp22
 
 .PHONY: all debug clean purge dist
@@ -17,23 +22,20 @@ all: $(PROG)
 $(PROG).o: $(PROG).c
 	$(CC) $(CFLAGS) -c $<
 
-%.o: %.c %.h
+%.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -c $<
 
-debug1: CFLAGS += -g -D_DEBUG_1
-debug1: $(PROG)
+print_tempos: CFLAGS += -DPRINT_TEMPOS
+print_tempos: $(PROG)
 
-debug2: CFLAGS += -g -D_DEBUG_2
-debug2: $(PROG)
-
-$(PROG): $(OBJS) 
+$(PROG): $(OBJ) 
 	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
 
 clean:
-	rm -f *~ *.bak *.tmp core 
+	rm -f *~ *.bak *.tmp core $(OBJ)
 
 purge: clean
-	rm -f  $(PROG) *.o a.out $(DISTDIR) $(DISTDIR).tar
+	rm -f  $(PROG) a.out $(DISTDIR) $(DISTDIR).tar
 	rm -f *.png marker.out
 
 dist: purge
