@@ -18,21 +18,21 @@ fi
 
 GRUPOS=("" "L3" "L2CACHE" "ENERGY" "FLOPS_DP")
 TESTES=("tempo" "banda_de_memoria" "cache_miss_l2" "energia" "operacoes_aritmeticas_dp" "operacoes_aritmeticas_avx_dp")
-CAMPOS=("" "L3 bandwidth [MBytes/s]" "L2 miss ratio" "Energy [J]" "DP [MFLOP/s]" "AVX DP [MFLOP/s]")
+CAMPOS=("" "L3 bandwidth" "L2 miss ratio" "Energy \[J\]" "^DP")
 FUNCOES="matvet matmat otimizado_matvet otimizado_matmat"
 N="64 100 128 200 256 512 600 900 1024 2000 2048 3000 4000"
 
-echo "Gerando logs do Likwid..."
-for i in {1..4}; do
-    for n in $N; do
-        echo "Gerando log ${GRUPOS[$i]}_$n..."
-        make purge > /dev/null
-        make > /dev/null
-        ./perfctr ${GRUPOS[$i]} ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
-        echo "Pronto."
-    done
-    echo "Logs de ${GRUPOS[$i]} gerados no diretorio $LOGS."
-done
+# echo "Gerando logs do Likwid..."
+# for i in {1..4}; do
+#     for n in $N; do
+#         echo "Gerando log ${GRUPOS[$i]}_$n..."
+#         make purge > /dev/null
+#         make > /dev/null
+#         ./perfctr ${GRUPOS[$i]} ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
+#         echo "Pronto."
+#     done
+#     echo "Logs de ${GRUPOS[$i]} gerados no diretorio $LOGS."
+# done
 
 ############################################################################
 
@@ -54,13 +54,13 @@ rm -f $DADOS/temp
 echo "Pronto."
 
 for i in {1..4}; do
-    rm $DADOS/${TESTES[$i]}*
+    rm -f $DADOS/${TESTES[$i]}*
     echo "Formatando dados do teste \"${TESTES[$i]}\"..."
     for n in $N; do
         k=1
         for funcao in $FUNCOES; do
             echo -n "$n " >> $DADOS/${TESTES[$i]}_$funcao.dat
-            grep -F "${CAMPOS[$i]}" $LOGS/${GRUPOS[$i]}_$n.log | cut -d, -f2 > $DADOS/temp
+            grep "${CAMPOS[$i]}" $LOGS/${GRUPOS[$i]}_$n.log | cut -d, -f2 > $DADOS/temp
             sed "${k}q;d" $DADOS/temp >> $DADOS/${TESTES[$i]}_$funcao.dat
             ((k++))
         done
@@ -74,7 +74,7 @@ for n in $N; do
     k=1
     for funcao in $FUNCOES; do
         echo -n "$n " >> $DADOS/operacoes_aritmeticas_avx_dp_$funcao.dat
-        grep -F "AVX DP [MFLOP/s]" $LOGS/FLOPS_DP_$n.log | cut -d, -f2 > $DADOS/temp
+        grep "AVX DP" $LOGS/FLOPS_DP_$n.log | cut -d, -f2 > $DADOS/temp
         sed "${k}q;d" $DADOS/temp >> $DADOS/operacoes_aritmeticas_avx_dp_$funcao.dat
         ((k++))
     done
