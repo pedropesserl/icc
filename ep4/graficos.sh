@@ -13,11 +13,11 @@ FUNCOES="matvet matmat otimizado_matvet otimizado_matmat"
 N="64 100 128 200 256 512 600 900 1024 2000 2048 3000 4000"
 
 echo "Gerando logs do Likwid..."
-for grupo in ${GRUPOS[@]}; do
+for i in {1..4}; do
     for n in $N; do
         make purge > /dev/null
         make > /dev/null
-        ./perfctr $grupo ./matmult $i > $LOGS/$grupo"_"$i".log"
+        ./perfctr $grupo ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
     done
     echo "Logs de $grupo gerados no diretorio $LOGS."
 done
