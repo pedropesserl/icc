@@ -1,7 +1,7 @@
 PROG = matmult
-CFILES = $(wildcard *.c)
-_OBJ = $(CFILES:%.c=%.o)
-_DEPS = $(wildcard *.h)
+
+_OBJ = matmult.o matriz.o utils.o
+_DEPS = matriz.h utils.h
 SDIR = src
 IDIR = include
 OBJ = $(_OBJ:%=$(SDIR)/%)
@@ -10,7 +10,7 @@ DEPS = $(_DEPS:%=$(IDIR)/%)
 CC = gcc
 CFLAGS = -Iinclude -Wall -Wextra
 LFLAGS = -lm
-DISTFILES = *.c *.h README.md Makefile perfctr graficos.sh
+DISTFILES = src/ include/ README.md Makefile perfctr graficos.sh
 DISTDIR = glc22-pfp22
 
 .PHONY: all debug clean purge dist
@@ -23,7 +23,7 @@ $(PROG).o: $(PROG).c
 	$(CC) $(CFLAGS) -c $<
 
 %.o: %.c $(DEPS)
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 print_tempos: CFLAGS += -DPRINT_TEMPOS
 print_tempos: $(PROG)
