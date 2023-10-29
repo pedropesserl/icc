@@ -2,7 +2,7 @@
 
 # Forma de uso:
 #
-#         perfctr <GRUPO_PERFORMANCE> ./matmult <opcoe_matmult>
+#         perfctr <GRUPO_PERFORMANCE> ./matmult <opcoes_matmult>
 #
 # Exemplo, para fazer as medições de performance de FLOPS_DP no core 3
 #
@@ -10,13 +10,10 @@
 #
 
 CPU="3"
-LIKWID_CMD="likwid-perfctr -C $CPU -g $1 -m"
+LIKWID_CMD="likwid-perfctr -O -C $CPU -g $1 -m"
 shift 1
 
 echo "performance" > /sys/devices/system/cpu/cpufreq/policy$CPU/scaling_governor
-
-make purge
-make
 
 ${LIKWID_CMD} $*
 
