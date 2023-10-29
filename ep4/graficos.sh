@@ -39,7 +39,7 @@ done
 echo 'Formatando dados do teste "tempo"...'
 rm -f $DADOS/tempo*
 make purge > /dev/null
-make print_tempos > /dev/null
+make > /dev/null
 for n in $N; do
     # Nos arquivos .log, a saída do programa começa na linha 6
     j=6
