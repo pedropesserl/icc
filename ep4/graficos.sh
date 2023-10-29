@@ -22,17 +22,17 @@ CAMPOS=("" "L3 bandwidth" "L2 miss ratio" "Energy \[J\]" "^DP")
 FUNCOES="matvet matmat otimizado_matvet otimizado_matmat"
 N="64 100 128 200 256 512 600 900 1024 2000 2048 3000 4000"
 
-# echo "Gerando logs do Likwid..."
-# for i in {1..4}; do
-#     for n in $N; do
-#         echo "Gerando log ${GRUPOS[$i]}_$n..."
-#         make purge > /dev/null
-#         make > /dev/null
-#         ./perfctr ${GRUPOS[$i]} ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
-#         echo "Pronto."
-#     done
-#     echo "Logs de ${GRUPOS[$i]} gerados no diretorio $LOGS."
-# done
+echo "Gerando logs do Likwid..."
+for i in {1..4}; do
+    for n in $N; do
+        echo "Gerando log ${GRUPOS[$i]}_$n..."
+        make purge > /dev/null
+        make > /dev/null
+        ./perfctr ${GRUPOS[$i]} ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
+        echo "Pronto."
+    done
+    echo "Logs de ${GRUPOS[$i]} gerados no diretorio $LOGS."
+done
 
 ############################################################################
 
