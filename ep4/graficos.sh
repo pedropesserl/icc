@@ -34,7 +34,7 @@ for i in {1..4}; do
     echo "Logs de ${GRUPOS[$i]} gerados no diretorio $LOGS."
 done
 
-############################################################################
+##########################################################################
 
 echo 'Formatando dados do teste "tempo"...'
 rm -f $DADOS/tempo*
@@ -89,12 +89,27 @@ echo "Gerando gráficos com gnuplot..."
 rm -f $GRAFS/*
 F="matvet matmat"
 YLABELS=("Tempo (ms)" "Banda de memória (MB/s)" "L2 miss ratio" "Energia (J)")
-for i in {0..3}; do
+LOGPLOTS="0 3"
+LINPLOTS="1 2"
+for i in $LINPLOTS; do
     for funcao in $F; do
         gnuplot -persist <<- EOFMarker
             set ylabel "${YLABELS[$i]}"
             set xlabel "Ordem da matriz"
-            set terminal png size 800,600
+            set terminal png size 1200,500
+            set output "$GRAFS/${TESTES[$i]}_$funcao.png"
+            plot "$DADOS/${TESTES[$i]}_$funcao.dat" title "$funcao" lt 7 lc 7 w lp, "$DADOS/${TESTES[$i]}_otimizado_$funcao.dat" title "$funcao - otimizado" lt 7 lc 6 w lp
+EOFMarker
+    done
+done
+
+for i in $LOGPLOTS; do
+    for funcao in $F; do
+        gnuplot -persist <<- EOFMarker
+            set logscale y
+            set ylabel "${YLABELS[$i]}"
+            set xlabel "Ordem da matriz"
+            set terminal png size 1200,500
             set output "$GRAFS/${TESTES[$i]}_$funcao.png"
             plot "$DADOS/${TESTES[$i]}_$funcao.dat" title "$funcao" lt 7 lc 7 w lp, "$DADOS/${TESTES[$i]}_otimizado_$funcao.dat" title "$funcao - otimizado" lt 7 lc 6 w lp
 EOFMarker
@@ -106,7 +121,7 @@ for funcao in $F; do
     gnuplot -persist <<- EOFMarker
         set ylabel "MFLOP/s"
         set xlabel "Ordem da matriz"
-        set terminal png size 800,600
+        set terminal png size 1200,500
         set output "$GRAFS/operacoes_aritmeticas_$funcao.png"
         plot "$DADOS/operacoes_aritmeticas_dp_$funcao.dat" title "DP: $funcao" lt 7 lc 7 w lp, "$DADOS/operacoes_aritmeticas_dp_otimizado_$funcao.dat" title "DP: $funcao - otimizado" lt 7 lc 6 w lp, "$DADOS/operacoes_aritmeticas_avx_dp_$funcao.dat" title "AVX: $funcao" lt 7 lc 2 w lp, "$DADOS/operacoes_aritmeticas_avx_dp_otimizado_$funcao.dat" title "AVX: $funcao - otimizado" lt 7 lc 1 w lp
 EOFMarker
