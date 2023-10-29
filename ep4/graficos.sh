@@ -54,7 +54,7 @@ rm -f $DADOS/temp
 echo "Pronto."
 
 for i in {1..4}; do
-    rm $DADOS/${TESTES[$i]}*
+    rm -f $DADOS/${TESTES[$i]}*
     echo "Formatando dados do teste \"${TESTES[$i]}\"..."
     for n in $N; do
         k=1
