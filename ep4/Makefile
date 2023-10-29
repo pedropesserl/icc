@@ -25,9 +25,6 @@ $(PROG).o: $(PROG).c
 %.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-print_tempos: CFLAGS += -DPRINT_TEMPOS
-print_tempos: $(PROG)
-
 $(PROG): $(OBJ) 
 	$(CC) $(CFLAGS) -o $@ $^ $(LFLAGS)
 

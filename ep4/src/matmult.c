@@ -90,12 +90,10 @@ int main (int argc, char *argv[]) {
     t_matmat_o = timestamp() - t_matmat_o;
     // multMatMat(mRow_1, mRow_2, n, resMat);
 
-#ifdef PRINT_TEMPOS
-     printf("%15.10lg\n", t_matvet);
-     printf("%15.10lg\n", t_matmat);
-     printf("%15.10lg\n", t_matvet_o);
-     printf("%15.10lg\n", t_matmat_o);
-#endif 
+    printf("%15.10lg\n", t_matvet);
+    printf("%15.10lg\n", t_matmat);
+    printf("%15.10lg\n", t_matvet_o);
+    printf("%15.10lg\n", t_matmat_o);
 
     liberaVetor ((void*)mRow_1);
     liberaVetor ((void*)mRow_2);
