@@ -31,7 +31,7 @@ for i in {1..4}; do
         ./perfctr ${GRUPOS[$i]} ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
         echo "Pronto."
     done
-    echo "Logs de ${GRUPOS[$i]} gerados no diretorio $LOGS."
+    echo "Logs de ${GRUPOS[$i]} gerados no diretório $LOGS."
 done
 
 ##########################################################################
