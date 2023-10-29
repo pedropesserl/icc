@@ -1,10 +1,20 @@
 #!/bin/bash
 
 # set -x
+set -e
 
 DADOS="./resultados/dados"
+if [ ! -d $DADOS ]; then
+    mkdir $DADOS
+fi
 LOGS="./resultados/likwid-logs"
+if [ ! -d $LOGS ]; then
+    mkdir $LOGS
+fi
 GRAFS="./resultados/graficos"
+if [ ! -d $GRAFS ]; then
+    mkdir $GRAFS
+fi
 
 GRUPOS=("" "MEM" "L2CACHE" "ENERGY" "FLOPS_DP")
 TESTES=("tempo" "banda_de_memoria" "cache_miss_l2" "energia" "operacoes_aritmeticas_dp" "operacoes_aritmeticas_avx_dp")
@@ -17,9 +27,9 @@ for i in {1..4}; do
     for n in $N; do
         make purge > /dev/null
         make > /dev/null
-        ./perfctr $grupo ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
+        ./perfctr ${GRUPOS[$i]} ./matmult $n > $LOGS/${GRUPOS[$i]}"_"$n".log"
     done
-    echo "Logs de $grupo gerados no diretorio $LOGS."
+    echo "Logs de ${GRUPOS[$i]} gerados no diretorio $LOGS."
 done
 
 ############################################################################
