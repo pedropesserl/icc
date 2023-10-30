@@ -10,7 +10,7 @@ DEPS = $(_DEPS:%=$(IDIR)/%)
 CC = gcc
 CFLAGS = -Iinclude -Wall -Wextra
 LFLAGS = -lm
-DISTFILES = src/ include/ README.md Makefile perfctr graficos.sh
+DISTFILES = src/ include/ LEIAME Makefile perfctr graficos.sh resultados/graficos/
 DISTDIR = glc22-pfp22
 
 .PHONY: all debug clean purge dist
