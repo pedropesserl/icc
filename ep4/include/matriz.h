@@ -25,10 +25,10 @@ Vetor geraVetor (int n, int zerar);
 
 void liberaVetor (void *vet);
 
-void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res);
+void multMatVet (MatRow __restrict__ mat, __restrict__ Vetor v, int m, int n, Vetor __restrict__ res);
 void multMatVet_otimizado(MatRow __restrict__ mat, Vetor __restrict__ v, int m, int n, Vetor __restrict__ res);
 
-void multMatMat(MatRow A, MatRow B, int n, MatRow C);
+void multMatMat(MatRow __restrict__ A, MatRow __restrict__ B, int n, __restrict__ MatRow C);
 void multMatMat_otimizado(MatRow __restrict__ A, MatRow __restrict__ B, int n, MatRow __restrict__ C);
 
 void prnMat (MatRow mat, int m, int n);

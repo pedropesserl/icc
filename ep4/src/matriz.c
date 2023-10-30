@@ -107,7 +107,7 @@ void liberaVetor (void *vet) {
  *
  */
 
-void multMatVet(MatRow mat, Vetor v, int m, int n, Vetor res) {
+void multMatVet(MatRow __restrict__ mat, Vetor __restrict__ v, int m, int n, Vetor __restrict__ res) {
     if (res) {
         for (int i = 0; i < m; ++i)
             for (int j = 0; j < n; ++j)
@@ -174,7 +174,7 @@ void multMatVet_otimizado(MatRow __restrict__ mat, Vetor __restrict__ v, int m, 
  *
  */
 
-void multMatMat (MatRow A, MatRow B, int n, MatRow C) {
+void multMatMat (MatRow __restrict__ A, MatRow __restrict__ B, int n, MatRow __restrict__ C) {
 
     /* Efetua a multiplicação */
     for (int i=0; i < n; ++i)
