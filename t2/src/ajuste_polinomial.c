@@ -4,21 +4,6 @@
 #include "sistema_linear.h"
 #include "ajuste_polinomial.h"
 
-struct Inter_t *tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs, struct Inter_t **pots_xs) {
-    struct Inter_t *data = (struct Inter_t*)calloc((2*m+1)*npts, sizeof(struct Inter_t));
-    if (!data)
-        MEM_ERR;
-    cria_matriz(npts, 2*m+1, pots_xs, data);
-    for (size_t i = 0; i < npts; i++) {
-        struct Inter_t pot_atual = UM_INTER;
-        for (size_t j = 0; j <= 2*m; j++) {
-            pots_xs[i][j] = pot_atual;
-            pot_atual = mult_inter(pot_atual, xs[i]);
-        }
-    }
-    return data;
-}
-
 struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts, struct Inter_t *ys,
                                             struct Inter_t *xs) {
     struct Sistema_t s = cria_sistema(ordem);
@@ -56,13 +41,16 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts, struct Inter_t *ys,
 }
 
 struct Inter_t *calcula_residuo(struct Sistema_t *s, size_t npts,
-                                struct Inter_t **pots_xs, struct Inter_t *ys) {
+                                struct Inter_t *xs, struct Inter_t *ys) {
     struct Inter_t *r = (struct Inter_t*)calloc(npts, sizeof(struct Inter_t));
     for (size_t i = 0; i < npts; i++) {
         struct Inter_t res = ZERO_INTER;
-        for (size_t j = 0; j < s->ordem; j++)
-            res = soma_inter(res, mult_inter(s->X[j], pots_xs[i][j]));
-        r[i] = sub_inter(res, ys[i]);
+        struct Inter_t pot_y = UM_INTER;
+        for (size_t j = 0; j < s->ordem; j++) {
+            res = soma_inter(res, mult_inter(s->X[j], pot_y));
+            pot_y = mult_inter(pot_y, xs[i]);
+        }
+        r[i] = sub_inter(ys[i], res);
     }
     return r;
 }
