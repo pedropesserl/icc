@@ -19,59 +19,37 @@ struct Inter_t *tabela_potencias_xs(size_t m, size_t npts, struct Inter_t *xs, s
     return data;
 }
 
-struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
-                            struct Inter_t **pots_xs, struct Inter_t *ys) {
+struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts, struct Inter_t *ys,
+                                            struct Inter_t *xs) {
     struct Sistema_t s = cria_sistema(ordem);
     
-    // preenchendo primeira linha da matriz do sistema e coluna de termos independentes
-    for (size_t k = 0; k < s.ordem; k++) {
-        struct Inter_t soma_xs = ZERO_INTER;
-        struct Inter_t soma_ys_xs = ZERO_INTER;
-        for (size_t i = 0; i < npts; i++) {
-            struct Inter_t pot_xi_k = pots_xs[i][k];
-            soma_xs = soma_inter(soma_xs, pot_xi_k);
-            soma_ys_xs = soma_inter(soma_ys_xs, mult_inter(ys[i], pot_xi_k));
+    // Calculando somatorios, iterando pelo vetor de pontos pois ele
+    // é muito maior que a matriz que sempre vai ser 5x5
+    s.A[0][0] = INTER_CONSTRUCT(npts);
+    for (size_t k = 0; k < npts; k++) {
+        struct Inter_t pot_xk = xs[k];
+
+        s.B[0] = soma_inter(s.B[0], ys[k]);
+        // Primeira linha da matriz e termos independetes
+        for (size_t j = 1; j < s.ordem; j++) {
+            s.A[0][j] = soma_inter(s.A[0][j], pot_xk);
+            s.B[j] = soma_inter(s.B[j], mult_inter(ys[k], pot_xk));
+
+            pot_xk = mult_inter(pot_xk, xs[k]);
         }
-        s.A[0][k] = soma_xs;
-        s.B[k] = soma_ys_xs;
+        // Ultima coluna da matriz
+        for (size_t i = 1; i < s.ordem; i++) {
+            s.A[i][s.ordem-1] = soma_inter(s.A[i][s.ordem-1], pot_xk);
+            pot_xk = mult_inter(pot_xk, xs[k]);
+        }
     }
 
-    // completando última coluna da matriz do sistema
-    for (size_t k = 1; k < s.ordem; k++) {
-        struct Inter_t soma_xs = ZERO_INTER;
-        for (size_t i = 0; i < npts; i++)
-            soma_xs = soma_inter(soma_xs, pots_xs[i][k+s.ordem-1]);
-        s.A[k][s.ordem-1] = soma_xs;
-    }
-    
-    // completando primeira metade do sistema
-    size_t i, j;
-    s.A[1][0] = s.A[0][1];
-    for (size_t k = UF; k < s.ordem; k+=UF) {
-        i = 1;
-        j = k-1;
-        while (j >= 1) {
-            for (int u = 0; u < UF; u++)
-                s.A[i][j+u] = s.A[0][k+u];
-            i++;
-            j--;
-        }
-        // !!!! Remainder só funciona para UF = 2 !!!!
-        s.A[i][0] = s.A[0][k+1];
-    }
 
-    // Calculando parte inferior da matriz
-    for (size_t k = UF-1; k < s.ordem - 1; k+= UF) {
-        i = k + 1;
-        j = s.ordem - 2;
-        while(i >= s.ordem-2) {
-            for (int u = 0; u < UF; u++)
-                s.A[i+u][j] = s.A[k+u][s.ordem-1];
-            j--;
-            i++;
+    // Matriz pequena e um vetor contiguo na memoria
+    for (size_t i = 1; i < s.ordem; i++) {
+        for (size_t j = 0; j < s.ordem-1; j++) {
+            s.A[i][j] = s.A[i-1][j+1];
         }
-        // !!!! Remainder só funciona para UF = 2 !!!!
-        s.A[s.ordem-1][j] = s.A[k][s.ordem-1];
     }
 
     return s;

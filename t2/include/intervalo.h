@@ -15,8 +15,9 @@
 #define INTER_MENOR -1
 #define INTER_MAIOR 1
 
-#define ZERO_INTER (struct Inter_t){.lo = 0.0, .up = 0.0}
-#define UM_INTER (struct Inter_t){.lo = 1.0, .up = 1.0}
+#define INTER_CONSTRUCT(val) (struct Inter_t){.lo = (val), .up = (val)}
+#define ZERO_INTER INTER_CONSTRUCT(0.0)
+#define UM_INTER INTER_CONSTRUCT(1.0)
 
 // Strutura que armazena menor(lo) e amior(up) valor de um intervalo
 struct Inter_t {

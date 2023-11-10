@@ -32,8 +32,8 @@ struct Inter_t *tabela_potencias_xs(size_t m, size_t npts,
 //  npts: número de pontos
 //  pots_xs: Tabela da potências dos x's
 //  ys: Vetor dos x's
-struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts,
-                            struct Inter_t **pots_xs, struct Inter_t *ys);
+struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts, struct Inter_t *ys,
+                                            struct Inter_t *xs);
 
 // Calcula o resíduo relativo ao polinômio gerado e à tabela original de pontos
 // Dados os valores:

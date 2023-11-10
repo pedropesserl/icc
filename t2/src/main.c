@@ -37,9 +37,12 @@ int main(void) {
     if (!pots_xs)
         MEM_ERR;
     struct Inter_t *data = tabela_potencias_xs(n, k, xs, pots_xs);
-    struct Sistema_t sistema = cria_SL_MQ(n+1, k, pots_xs, ys);
+    struct Sistema_t sistema = cria_SL_MQ(n+1, k, ys, xs);
+    // imprime_sistema(&sistema);
     LIKWID_MARKER_STOP("Gera_SL");
     t_gera_SL = timestamp() - t_gera_SL;
+
+    // goto end;
 
     // Resolvendo SL
     rtime_t t_solu_SL = timestamp();
@@ -53,7 +56,7 @@ int main(void) {
 
     for (size_t i = 0; i < n+1; i++)
         printf(INTERFMT" ", FMTINTER(sistema.X[i]));
-    printf("\n");
+    printf("\n\n");
     for (size_t i = 0; i < k; i++)
         printf(INTERFMT" ", FMTINTER(residuos[i]));
     printf("\n");
@@ -61,6 +64,7 @@ int main(void) {
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);
 
+// end:
     // Liberando memória
     destroi_sistema(&sistema);
     free(pots_xs);
