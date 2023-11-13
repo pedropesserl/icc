@@ -58,8 +58,9 @@ double retangulos_xy(double a, double b, int n_amostras) {
     for (int i = 0; i < n_amostras; i++, x += h) {
         double xq = x*x;
         double fx = xq*xq - 16*xq + 5*x;
-        resultado += n_amostras * fx * h*h;
+        resultado += fx;
     }
+    resultado *= h*h * n_amostras;
 
     double t_final = timestamp();
     printf("Tempo decorrido: %lf ms.\n", t_final - t_inicial);
