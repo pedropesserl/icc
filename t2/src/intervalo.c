@@ -6,36 +6,6 @@
 #include <fenv.h>
 #include "../include/intervalo.h"
 
-// double nextafter(double x, double y); retorna o proximo double depois de x na direção de y
-//     ou seja:
-//     nextafter(x, INFINITY)  retorna o menor double maior que x
-//     nextafter(x, -INFINITY) retorna o maior double menor que x
-
-double M(double a){
-    return nextafter(a, INFINITY);
-}
-
-struct Inter_t soma_inter(struct Inter_t a, struct Inter_t b) {
-    struct Inter_t soma;
-    soma.lo = a.lo + b.lo;
-    soma.up = M(a.up + b.up);
-    return soma;
-}
-
-struct Inter_t sub_inter(struct Inter_t a, struct Inter_t b) {
-    struct Inter_t sub;
-    sub.lo = a.lo - b.up;
-    sub.up = M(a.up - b.lo);
-    return sub;
-}
-
-struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b) {
-    struct Inter_t mult;
-    mult.lo = MIN4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up);
-    mult.up = M(MAX4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up));
-    return mult;
-}
-
 struct Inter_t div_inter(struct Inter_t a, struct Inter_t b) {
     struct Inter_t div;
     if (b.lo <= 0 && 0 <= b.up) { // intervalo b contém 0
@@ -62,11 +32,4 @@ int compara_inter(struct Inter_t a, struct Inter_t b) {
 
     // (a - b).lo > 0   => a > b
     return INTER_MAIOR;
-}
-
-struct Inter_t fabs_inter(struct Inter_t a) {
-    a.lo = fabs(a.lo);
-    a.up = fabs(a.up);
-
-    return a;
 }

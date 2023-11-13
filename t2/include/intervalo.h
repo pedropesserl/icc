@@ -1,6 +1,10 @@
 // Autores: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 #ifndef INTERVALO_H_
 #define INTERVALO_H_
+#include <stdlib.h>
+#include <float.h>
+#include <math.h> // INFINITY, -INFINITY, nextafter, pow
+#include <fenv.h>
 
 #define MIN2(a, b)       ((a) < (b) ? (a) : (b))
 #define MIN4(a, b, c, d) (MIN2(MIN2(MIN2(a, b), c), d))
@@ -25,16 +29,16 @@ struct Inter_t {
 };
 
 // Retorna o próximo valor, depois de a, representado por um double
-double M(double a);
+inline double M(double a);
 
 // Soma dois intervalos
-struct Inter_t soma_inter(struct Inter_t a, struct Inter_t b);
+inline struct Inter_t soma_inter(struct Inter_t a, struct Inter_t b);
 
 // Subtrai dois intervalos
-struct Inter_t sub_inter(struct Inter_t a, struct Inter_t b); 
+inline struct Inter_t sub_inter(struct Inter_t a, struct Inter_t b); 
 
 // Multiplica dois intervalos
-struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b); 
+inline struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b); 
 
 // Divide dois intervalos
 struct Inter_t div_inter(struct Inter_t a, struct Inter_t b); 
@@ -46,6 +50,41 @@ struct Inter_t div_inter(struct Inter_t a, struct Inter_t b);
 int compara_inter(struct Inter_t a, struct Inter_t b);
 
 // Retorna o intervalo a porém com valor absoluto
-struct Inter_t fabs_inter(struct Inter_t a);
+inline struct Inter_t fabs_inter(struct Inter_t a);
+
+// ----------------------- IMPLEMNTAÇÃO INLINE -----------------------
+// double nextafter(double x, double y); retorna o proximo double depois de x na direção de y
+//     ou seja:
+//     nextafter(x, INFINITY)  retorna o menor double maior que x
+//     nextafter(x, -INFINITY) retorna o maior double menor que x
+
+inline double M(double a){
+    return nextafter(a, INFINITY);
+}
+
+inline struct Inter_t soma_inter(struct Inter_t a, struct Inter_t b) {
+    return (struct Inter_t){.lo = a.lo + b.lo, .up = M(a.up + b.up)};
+}
+
+inline struct Inter_t sub_inter(struct Inter_t a, struct Inter_t b) {
+    return (struct Inter_t){
+        .lo = a.lo - b.up,
+        .up = M(a.up - b.lo)
+    };
+}
+
+inline struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b) {
+    return (struct Inter_t){
+        .lo = MIN4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up),
+        .up = M(MAX4(a.lo*b.lo, a.lo*b.up, a.up*b.lo, a.up*b.up))
+    };
+}
+
+inline struct Inter_t fabs_inter(struct Inter_t a) {
+    return (struct Inter_t){
+        .lo = fabs(a.lo),
+        .up = fabs(a.up)
+    };
+}
 
 #endif // INTERVALO_H_
