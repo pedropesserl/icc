@@ -24,12 +24,17 @@ double monte_carlo(double a, double b, int n_amostras, int n_dimensoes) {
 
     double t_inicial = timestamp();
 
-    /*
-
-       AQUI IMPLEMENTE O CÁLCULO DA INTEGRAL  PELO
-       MÉTODO DE MONTE CARLO
-
-    */
+    // como a função é uma soma, podemos calcular os valores de cada parâmetro
+    // da função independentemente.
+    for (int i = 0; i < n_amostras * n_dimensoes; i++) {
+        double x = a + ((double)random() / RAND_MAX)*(b - a);
+        double xq = x*x;
+        resultado += xq*xq - 16*xq + 5*x;
+    }
+    resultado /= 2;
+    for (int i = 0; i < n_dimensoes; i++) {
+        resultado *= (b - a)/(n_amostras);
+    }
 
     double t_final = timestamp();
     printf("Tempo decorrido: %lf ms.\n", t_final - t_inicial);
@@ -48,7 +53,7 @@ double retangulos_xy(double a, double b, int n_amostras) {
     double t_inicial = timestamp();
     
     // como a função é uma soma, podemos calcular os valores de f(x) e f(y)
-    // separadamente e multiplicar pelo número de pontos, aumentando a performance.
+    // independentemente e multiplicar pelo número de pontos, aumentando a performance.
     // além disso, já que a função divide a soma por 2, e dado que os valores
     // de x e y são iguais nas suas iterações (ambos começam em a e são
     // incrementados de h a cada iteração), podemos simplesmente calcular o
@@ -57,8 +62,7 @@ double retangulos_xy(double a, double b, int n_amostras) {
     double x = a + h/2;
     for (int i = 0; i < n_amostras; i++, x += h) {
         double xq = x*x;
-        double fx = xq*xq - 16*xq + 5*x;
-        resultado += fx;
+        resultado += xq*xq - 16*xq + 5*x;
     }
     resultado *= h*h * n_amostras;
 
@@ -85,6 +89,8 @@ int main(int argc, char **argv) {
     srandom(20232);
 
     printf("Resultado da integral pelo método dos retângulos: %lf\n", retangulos_xy(a, b, n_amostras));
+
+    printf("Resultado da integral pelo método de Monte Carlo: %lf\n", monte_carlo(a, b, n_amostras, n_dimensoes));
 
     // CHAMAR FUNÇÕES DE INTEGRAÇÃO E EXIBIR RESULTADOS
 
