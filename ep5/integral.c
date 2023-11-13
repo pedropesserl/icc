@@ -9,10 +9,10 @@
 #define NRAND    ((double) rand() / RAND_MAX)  // drand48() 
 #define SRAND(a) srand(a) // srand48(a)
 
-// Retorna o valor da função Styblinksi-Tang aplicada num vetor x de 1 dimensão.
-double styblinski_tang(double x) {
+// Retorna o valor da função Styblinksi-Tang aplicada num vetor x de 1 dimensão multiplicado por 2.
+inline double styblinski_tang(double x) {
     double xiq = x*x;
-    return (xiq*xiq - 16*xiq + 5*x) / 2;
+    return (xiq*xiq - 16*xiq + 5*x);
 }
 
 // Integral Monte Carlo da função Styblinski-Tang de n dimensões
@@ -28,13 +28,12 @@ double monte_carlo(double a, double b, int n_amostras, int n_dimensoes) {
     // da função independentemente.
     for (int i = 0; i < n_amostras * n_dimensoes; i++) {
         double x = a + ((double)random() / RAND_MAX)*(b - a);
-        double xq = x*x;
-        resultado += xq*xq - 16*xq + 5*x;
+        resultado += styblinski_tang(x);
     }
-    resultado /= 2;
-    for (int i = 0; i < n_dimensoes; i++) {
-        resultado *= (b - a)/(n_amostras);
-    }
+    // O intervalo é (b-a)^n_dimensões
+    for (int d = 0; d < n_dimensoes; d++)
+        resultado *= (b-a);
+    resultado /= (2*n_amostras);
 
     double t_final = timestamp();
     printf("Tempo decorrido: %lf ms.\n", t_final - t_inicial);
@@ -60,10 +59,8 @@ double retangulos_xy(double a, double b, int n_amostras) {
     // valor de f(x) e não dividí-lo por 2, conseguindo o valor da integral
     // em apenas um loop.
     double x = a + h/2;
-    for (int i = 0; i < n_amostras; i++, x += h) {
-        double xq = x*x;
-        resultado += xq*xq - 16*xq + 5*x;
-    }
+    for (int i = 0; i < n_amostras; i++, x += h)
+        resultado += styblinski_tang(x);
     resultado *= h*h * n_amostras;
 
     double t_final = timestamp();
