@@ -42,7 +42,7 @@ double monte_carlo(double a, double b, int n_amostras, int n_dimensoes) {
 }
 
 // Integral pelo método dos retângulos da função Styblinsky-Tang de 2 dimensões
-double retangulos_xy(double a, double b, int n_amostras) {
+double retangulos_xy(double a, double b, int n_amostras, int n_dimensoes) {
     double h = (b - a)/n_amostras;
     double resultado = 0.0;
 
@@ -58,10 +58,21 @@ double retangulos_xy(double a, double b, int n_amostras) {
     // incrementados de h a cada iteração), podemos simplesmente calcular o
     // valor de f(x) e não dividí-lo por 2, conseguindo o valor da integral
     // em apenas um loop.
+    // double x = a + h/2;
+    // for (int i = 0; i < n_amostras; i++, x += h)
+    //     resultado += styblinski_tang(x);
+    // resultado *= h*h * n_amostras;
+
+    // metodo dos ratangulos ara dimensões alem de 2
     double x = a + h/2;
     for (int i = 0; i < n_amostras; i++, x += h)
         resultado += styblinski_tang(x);
-    resultado *= h*h * n_amostras;
+
+    for (int i = 0; i < n_dimensoes-1; i++)
+        resultado *= h * n_amostras;
+
+    resultado *= h * n_dimensoes;
+    resultado /= 2.0;
 
     double t_final = timestamp();
     printf("Tempo decorrido: %lf ms.\n", t_final - t_inicial);
@@ -83,9 +94,9 @@ int main(int argc, char **argv) {
     sscanf(argv[3], "%d", &n_amostras);
     sscanf(argv[4], "%d", &n_dimensoes);
 
-    srandom(20232);
+    SRAND(20232);
 
-    printf("Resultado da integral pelo método dos retângulos: %lf\n", retangulos_xy(a, b, n_amostras));
+    printf("Resultado da integral pelo método dos retângulos: %lf\n", retangulos_xy(a, b, n_amostras, n_dimensoes));
 
     printf("Resultado da integral pelo método de Monte Carlo: %lf\n", monte_carlo(a, b, n_amostras, n_dimensoes));
 

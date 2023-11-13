@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O3 -march=native -mavx2
+CFLAGS = -Wall -Wextra -O3 -march=native
 LDFLAGS = -lm
 
 FILES = utils.c integral.c
