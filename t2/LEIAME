@@ -1,31 +1,28 @@
 Nomes: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 
-# Limitações encontradas:
+# Otimizações
+## Gerando SL
+A otimização feita foi calcular as potências de cada x_i e ir somando nos somatórios
+dessa forma não precisa ficar voltando a carregar o vetor de pontos para cada somatório.
 
-Não encontramos casos nos quais o programa não funciona.
+## Vetor de ponto ao invés de dois vetore
+A preferência foi escolher um vetor de pontos pois sempre que usamos um valor de x_i
+vamos usar em sequência o valor de y_i para somar os somatorios dos termos independentes.
 
-# Módulos
-## intervalo
-    Composto pelos arquivos intervalo.h e intervalo.c, tem como responsabilidade
-prover as operações aritméticas intervalares, como:
-    * Soma
-    * Subtração
-    * Multiplicação
-    * Divisão
-    * Comparação
-    * Operador módulo
+## Funções inline
+As funções da biblioteca intervalo
+    * M
+    * soma_inter
+    * sub_inter
+    * mult_inter
+    * fabs_inter
+São inline para diminuir a chamada de funções em grandes iterações. div_inter e compara_inter não foi 
+feita inline pois tem condcionais dentro dela.
 
-## Sistema linear
-    Composto pelos arquivos sistema_linear.h sistema_linear.c, tem como
-responsabilidade gerenciar memória da estrutura do SL, e prover uma função para
-resolver o SL, sendo essa a função eliminacao_gauss. Também provê duas funções
-para criação de matrizes de referência.
+# Otimizações não feitas
+## Copiando na matriz
+Não é preciso utilizar um metodo eficinete de copiar o resto dos elementos ao gerar o SL.
+pois a matriz vai ter no máximo 480 bytes de memoria (5*6*16), logo ela cabe inteiramente na cache.
 
-## Ajuste polinomial
-    Composto pelos arquivos ajuste_polinomial.h ajuste_polinomial.c, tem como
-responsabilidade criar a tabela de potências, gerar o sistema linear de mínimos
-quadrados e calcular resíduo. Elas são as funções efetivamente usadas no programa
-principal.
-
-# Como executar o script
-script.sh <arq_teste> > <arq_saida>
+## Eliminação de gauss e retrosubstituição
+Mesmo motivo, matriz cabe na cache.

@@ -4,7 +4,7 @@
 #include <float.h>
 #include <math.h> // INFINITY, -INFINITY, nextafter, pow
 #include <fenv.h>
-#include "../include/intervalo.h"
+#include "intervalo.h"
 
 struct Inter_t div_inter(struct Inter_t a, struct Inter_t b) {
     struct Inter_t div;

@@ -47,7 +47,9 @@ struct Inter_t *calcula_residuo(struct Sistema_t *s, size_t npts,
     for (size_t i = 0; i < npts; i++) {
         struct Inter_t res = ZERO_INTER;
         struct Inter_t pot_y = UM_INTER;
-        for (size_t j = 0; j < s->ordem; j++) {
+        for (size_t j = 0; j < s->ordem; j+=2) {
+            res = soma_inter(res, mult_inter(s->X[j], pot_y));
+            pot_y = mult_inter(pot_y, xs[i]);
             res = soma_inter(res, mult_inter(s->X[j], pot_y));
             pot_y = mult_inter(pot_y, xs[i]);
         }

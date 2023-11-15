@@ -37,8 +37,6 @@ int main(void) {
     LIKWID_MARKER_STOP("Gera_SL");
     t_gera_SL = timestamp() - t_gera_SL;
 
-    // goto end;
-
     // Resolvendo SL
     rtime_t t_solu_SL = timestamp();
     LIKWID_MARKER_START("Resolve_SL");
@@ -59,7 +57,6 @@ int main(void) {
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);
 
-// end:
     // Liberando memória
     destroi_sistema(&sistema);
     free(residuos);
