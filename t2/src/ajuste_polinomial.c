@@ -19,14 +19,14 @@ struct Sistema_t cria_SL_MQ(size_t ordem, size_t npts, struct Inter_t *ys,
         // Primeira linha da matriz e termos independetes
         for (size_t j = 1; j < s.ordem; j++) {
             s.A[0][j] = soma_inter(s.A[0][j], pot_xk);
-            s.B[j] = soma_inter(s.B[j], mult_inter(ys[k], pot_xk));
+            s.B[j] = soma_inter(s.B[j], mult_inter(&ys[k], &pot_xk));
 
-            pot_xk = mult_inter(pot_xk, xs[k]);
+            pot_xk = mult_inter(&pot_xk, &xs[k]);
         }
         // Ultima coluna da matriz
         for (size_t i = 1; i < s.ordem; i++) {
             s.A[i][s.ordem-1] = soma_inter(s.A[i][s.ordem-1], pot_xk);
-            pot_xk = mult_inter(pot_xk, xs[k]);
+            pot_xk = mult_inter(&pot_xk, &xs[k]);
         }
     }
 
@@ -47,11 +47,9 @@ struct Inter_t *calcula_residuo(struct Sistema_t *s, size_t npts,
     for (size_t i = 0; i < npts; i++) {
         struct Inter_t res = ZERO_INTER;
         struct Inter_t pot_y = UM_INTER;
-        for (size_t j = 0; j < s->ordem; j+=2) {
-            res = soma_inter(res, mult_inter(s->X[j], pot_y));
-            pot_y = mult_inter(pot_y, xs[i]);
-            res = soma_inter(res, mult_inter(s->X[j], pot_y));
-            pot_y = mult_inter(pot_y, xs[i]);
+        for (size_t j = 0; j < s->ordem; j++) {
+            res = soma_inter(res, mult_inter(&(s->X[j]), &pot_y));
+            pot_y = mult_inter(&pot_y, &xs[i]);
         }
         r[i] = sub_inter(ys[i], res);
     }
