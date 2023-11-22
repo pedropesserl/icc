@@ -1,0 +1,32 @@
+Nomes: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
+
+Modo de uso:
+    $ make
+    $ ./integral <inicial> <final> <n_amostras> <n_dimensoes>
+
+Observações importantes:
+    Encontramos uma maneira de otimizar o cálculo da integral da função Styblinsky-Tang pelo método
+    dos retângulos de tal forma que o algoritmo é linear e mais rápido que o método de Monte Carlo.
+    Esse método é também mais preciso e generalizado para n dimensões em vez de apenas duas.
+    Para fins de exemplo, segue a saída do programa para:
+    $ ./integral -4 4 100000000 5
+
+    Metodo dos Retangulos.
+    a = -4.000000, b = 4.000000, n = 100000000, h = 8e-08, variaveis = 5
+    Tempo decorrido: 143.905742 ms.
+    Resultado da integral pelo método dos retângulos: -2796202.668857
+    Metodo de Monte Carlo.
+    a = -4.000000, b = 4.000000, n = 100000000, variaveis = 5
+    Tempo decorrido: 3013.205442 ms.
+    Resultado da integral pelo método de Monte Carlo: -2796255.968957
+
+    Calculamos essa integral pelo site Wolfram Alpha, e o seu resultado exato é -2796202.66666...
+    (https://www.wolframalpha.com/input?i2d=true&i=Integrate%5BIntegrate%5BIntegrate%5BIntegrate%5BIntegrate%5BDivide%5BPower%5Ba%2C4%5D-16Power%5Ba%2C2%5D%2B5a%2BPower%5Bb%2C4%5D-16Power%5Bb%2C2%5D%2B5b%2BPower%5Bc%2C4%5D-16Power%5Bc%2C2%5D%2B5c%2BPower%5Bd%2C4%5D-16Power%5Bd%2C2%5D%2B5d%2BPower%5Be%2C4%5D-16Power%5Be%2C2%5D%2B5e%2C2%5D%2C%7Ba%2C-4%2C4%7D%5D%2C%7Bb%2C-4%2C4%7D%5D%2C%7Bc%2C-4%2C4%7D%5D%2C%7Bd%2C-4%2C4%7D%5D%2C%7Be%2C-4%2C4%7D%5D).
+    Ou seja, o método dos retângulos teve um erro relativo de 0.000000078%, enquanto o método de
+    Monte Carlo teve um erro relativo de 0.0019%.
+
+    O algoritmo que desenvolvemos se baseia no formato da função Styblinksy-Tang, que é uma soma
+    idêntica para todas as suas variáveis. Manipulando essa soma, percebemos que o valor da integral
+    é o mesmo para cada variável independentemente, ou seja, podemos calcular o valor para apenas
+    uma e multiplicá-lo pelo número de variáveis. Isso porque todas as variáveis assumem os mesmos
+    valores em suas iterações, isto é, começam em a e são incrementadas de h a cada iteração.
