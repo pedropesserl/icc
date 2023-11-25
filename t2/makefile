@@ -20,12 +20,6 @@ all: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native -O3
 all: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
 all: $(PROGRAM)
 
-sem_otimizacao: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native
-sem_otimizacao: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
-sem_otimizacao: $(PROGRAM)
-
-debug: $(PROGRAM)
-
 $(PROGRAM): $(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)
 
