@@ -39,4 +39,4 @@ clean:
 	rm -f $(OBJ) v1/src/*.o
 
 purge:
-	rm -f $(OBJ) v1/src/*.o $(PROGRAM) v1/$(PROGRAM)
+	rm -f $(OBJ) v1/src/*.o $(PROGRAM) v1/$(PROGRAM) gera_entrada
