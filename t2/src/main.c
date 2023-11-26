@@ -57,6 +57,7 @@ int main(void) {
 
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);
+    printf("%1.8e\n", t_residuos);
 
     // Liberando memória
     destroi_sistema(&sistema);
