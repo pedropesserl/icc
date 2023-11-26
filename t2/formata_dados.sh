@@ -14,6 +14,7 @@ fi
 N="64"
 FUNCOES="gera_sl resolve_sl calcula_residuos"
 CAMPOS=("^DP" "L2 miss ratio" "L3 bandwidth")
+TESTES=("operacoes_aritmeticas_dp" "cache_miss_l2" "banda_de_memoria")
 VERSOES="v1 v2"
 
 echo 'Formatando dados do teste "tempo"...'
@@ -33,3 +34,38 @@ for n in $N; do
 done
 echo "Pronto." 
 
+for i in {0..2}; do
+    rm -f $DADOS/${TESTES[$i]}*
+    echo "Formatando dados do teste \"${TESTES[$i]}\"..."
+    for n in $N; do
+        for versao in $VERSOES; do
+            k=1
+            for funcao in $FUNCOES; do
+                echo -n "$n " >> $DADOS/${TESTES[$i]}"_$funcao"_"$versao.dat"
+                grep "${CAMPOS[$i]}" $LOGS/${GRUPOS[$i]}_$n"_$versao.log" | \
+                    cut -d, f2 > $DADOS/temp
+                sed "${k}q;d" $DADOS/temp >> $DADOS/${TESTES[$i]}_$funcao"_$versao.dat"
+                ((k++))
+            done
+        done
+    done
+    echo "Pronto."
+done
+
+# O teste de FLOPS_DP é especial por precisarmos de dois de seus campos; buscando o segundo
+rm -f $DADOS/operacoes_aritmeticas_avx_dp*
+echo 'Formatando dados do teste "operacoes_aritmeticas_avx_dp"...'
+for n in $N; do
+    for versao in $VERSOES; do
+        k=1
+        for funcao in $FUNCOES; do
+            echo -n "$n " >> $DADOS/operacoes_aritmeticas_avx_dp_$funcao"_$versao.dat"
+            grep "AVX DP" $LOGS/FLOPS_DP_$n"_$versao.log" | cut -d, -f2 > $DADOS/temp
+            sed "${k}q;d" $DADOS/temp >> \
+                $DADOS/operacoes_aritmeticas_avx_dp_$funcao"_versao".dat
+            ((k++))
+        done
+    done
+done
+echo "Pronto."
+rm -f $DADOS/temp
