@@ -45,14 +45,15 @@ int main(void) {
     t_solu_SL = timestamp() - t_solu_SL;
 
     // Calculando resíduos
+    rtime_t t_residuos = timestamp();
+    LIKWID_MARKER_START("Calcula_Residuos");
     struct Inter_t *residuos = calcula_residuo(&sistema, k, xs, ys);
+    LIKWID_MARKER_STOP("Calcula_Residuos");
+    t_residuos = timestamp() - t_residuos;
 
     for (size_t i = 0; i < n+1; i++)
         printf(INTERFMT" ", FMTINTER(sistema.X[i]));
     printf("\n\n");
-    for (size_t i = 0; i < k; i++)
-        printf(INTERFMT" ", FMTINTER(residuos[i]));
-    printf("\n");
 
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);
