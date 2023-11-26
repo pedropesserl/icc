@@ -25,7 +25,7 @@ for grupo in $GRUPOS; do
 
         echo "Gerando log ${grupo}_${n}_v2"
         echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
-        ./gera_entrada $n | likwid-perfctr -O -C 3 -g $grupo -m ajustePol \
+        ./gera_entrada $n | likwid-perfctr -O -C 3 -g $grupo -m ./ajustePol \
             > $LOGS/${grupo}_${n}_v2.log
         echo "powersave" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
     done
