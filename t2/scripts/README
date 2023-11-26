@@ -1,0 +1,3 @@
+Atenção: os scripts nesse diretório foram feitos para serem executados no diretório
+anterior. Se for necessário executá-los individualmente, em vez de por meio do script
+script.sh, esteja no diretório anterior e rode, por exemplo, scripts/logs_likwid.sh.
