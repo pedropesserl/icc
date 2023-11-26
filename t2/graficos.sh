@@ -10,6 +10,7 @@ fi
 
 FUNCOES="gera_sl resolve_sl calcula_residuos"
 
+rm -f $GRAFS/*
 echo "Gerando gráficos com gnuplot..."
 
 # Tempo
@@ -18,7 +19,7 @@ for funcao in $FUNCOES; do
         set logscale
         set ylabel "Tempo (ms)"
         set xlabel "Número de pontos"
-        set terminal png size 900,700
+        set terminal png size 900,500
         set output "$GRAFS/tempo_$funcao.png"
         plot "$DADOS/tempo_${funcao}_v1.dat" title "$funcao - v1" lt 7 lc 7 w lp, "$DADOS/tempo_${funcao}_v2.dat" title "$funcao - v2" lt 7 lc 6 w lp
 EOFMarker
@@ -52,7 +53,7 @@ for teste in $TESTES; do
             plot "$DADOS/${teste}_${funcao}_v1.dat" title "$funcao - v1" lt 7 lc 7 w lp, "$DADOS/${teste}_${funcao}_v2.dat" title "$funcao - v2" lt 7 lc 7 w lp
 EOFMarker
     done
-    ((i++))
+    i=$((i+1))
 done
 
 echo "Gráficos gerados no diretório $GRAFS."
