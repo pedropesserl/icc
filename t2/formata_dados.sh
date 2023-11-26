@@ -23,9 +23,9 @@ for n in $N; do
         # na linha 8 e do cálculo dos resíduos na linha 9
         j=7
         for funcao in $FUNCOES; do
-            echo -n "$n " >> $DADOS/tempo_$funcao"_$versao.dat"
+            echo -n "$n " >> $DADOS/tempo_${funcao}_${versao}.dat
             # Escolhi pegar a saída contida nos arquivos L3 arbitrariamente
-            sed "${j}q;d" $LOGS/L3_$n"_"$versao.log >> $DADOS/tempo_$funcao"_$versao.dat"
+            sed "${j}q;d" $LOGS/L3_${n}_${versao}.log >> $DADOS/tempo_${funcao}_${versao}.dat
             ((j++))
         done
     done
@@ -39,11 +39,11 @@ for i in {0..2}; do
         for versao in $VERSOES; do
             k=1
             for funcao in $FUNCOES; do
-                echo -n "$n " >> $DADOS/${TESTES[$i]}"_$funcao"_"$versao.dat"
-                grep "${CAMPOS[$i]}" $LOGS/${GRUPOS[$i]}_$n"_$versao.log" |\
+                echo -n "$n " >> $DADOS/${TESTES[$i]}_${funcao}_${versao}.dat
+                grep "${CAMPOS[$i]}" $LOGS/${GRUPOS[$i]}_${n}_${versao}.log |\
                     cut -d, -f2 |\
                     sed "${k}q;d" >> \
-                    $DADOS/${TESTES[$i]}_$funcao"_$versao.dat"
+                    $DADOS/${TESTES[$i]}_${funcao}_${versao}.dat
                 ((k++))
             done
         done
@@ -58,11 +58,11 @@ for n in $N; do
     for versao in $VERSOES; do
         k=1
         for funcao in $FUNCOES; do
-            echo -n "$n " >> $DADOS/operacoes_aritmeticas_avx_dp_$funcao"_$versao.dat"
-            grep "AVX DP" $LOGS/FLOPS_DP_$n"_$versao.log" |\
+            echo -n "$n " >> $DADOS/operacoes_aritmeticas_avx_dp_${funcao}_${versao}.dat
+            grep "AVX DP" $LOGS/FLOPS_DP_${n}_${versao}.log |\
                 cut -d, -f2 |\
                 sed "${k}q;d" >> \
-                $DADOS/operacoes_aritmeticas_avx_dp_$funcao"_$versao".dat
+                $DADOS/operacoes_aritmeticas_avx_dp_${funcao}_${versao}.dat
             ((k++))
         done
     done
