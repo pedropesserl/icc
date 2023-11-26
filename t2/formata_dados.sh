@@ -13,6 +13,7 @@ fi
 
 N="64"
 FUNCOES="gera_sl resolve_sl calcula_residuos"
+GRUPOS=("FLOPS_DP" "L2CACHE" "L3")
 CAMPOS=("^DP" "L2 miss ratio" "L3 bandwidth")
 TESTES=("operacoes_aritmeticas_dp" "cache_miss_l2" "banda_de_memoria")
 VERSOES="v1 v2"
