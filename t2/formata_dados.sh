@@ -2,16 +2,13 @@
 
 set -e
 
+LOGS="./resultados/likwid-logs"
 DADOS="./resultados/dados"
 if [ ! -d $DADOS ]; then
     mkdir $DADOS
 fi
-LOGS="./resultados/likwid-logs"
-if [ ! -d $LOGS ]; then
-    mkdir $LOGS
-fi
 
-N="64 128 200"
+N="64 128 200 256 512 600 800 1024 2000 3000 4096 6000 7000 10000 50000 100000 1000000 10000000 100000000"
 FUNCOES="gera_sl resolve_sl calcula_residuos"
 GRUPOS=("FLOPS_DP" "L2CACHE" "L3")
 CAMPOS=("^DP" "L2 miss ratio" "L3 bandwidth")
