@@ -11,7 +11,7 @@ if [ ! -d $LOGS ]; then
     mkdir $LOGS
 fi
 
-N="64"
+N="64 128 200"
 FUNCOES="gera_sl resolve_sl calcula_residuos"
 GRUPOS=("FLOPS_DP" "L2CACHE" "L3")
 CAMPOS=("^DP" "L2 miss ratio" "L3 bandwidth")
@@ -43,9 +43,10 @@ for i in {0..2}; do
             k=1
             for funcao in $FUNCOES; do
                 echo -n "$n " >> $DADOS/${TESTES[$i]}"_$funcao"_"$versao.dat"
-                grep "${CAMPOS[$i]}" $LOGS/${GRUPOS[$i]}_$n"_$versao.log" | \
-                    cut -d, f2 > $DADOS/temp
-                sed "${k}q;d" $DADOS/temp >> $DADOS/${TESTES[$i]}_$funcao"_$versao.dat"
+                grep "${CAMPOS[$i]}" $LOGS/${GRUPOS[$i]}_$n"_$versao.log" |\
+                    cut -d, -f2 |\
+                    sed "${k}q;d" >> \
+                    $DADOS/${TESTES[$i]}_$funcao"_$versao.dat"
                 ((k++))
             done
         done
@@ -61,12 +62,12 @@ for n in $N; do
         k=1
         for funcao in $FUNCOES; do
             echo -n "$n " >> $DADOS/operacoes_aritmeticas_avx_dp_$funcao"_$versao.dat"
-            grep "AVX DP" $LOGS/FLOPS_DP_$n"_$versao.log" | cut -d, -f2 > $DADOS/temp
-            sed "${k}q;d" $DADOS/temp >> \
-                $DADOS/operacoes_aritmeticas_avx_dp_$funcao"_versao".dat
+            grep "AVX DP" $LOGS/FLOPS_DP_$n"_$versao.log" |\
+                cut -d, -f2 |\
+                sed "${k}q;d" >> \
+                $DADOS/operacoes_aritmeticas_avx_dp_$funcao"_$versao".dat
             ((k++))
         done
     done
 done
 echo "Pronto."
-rm -f $DADOS/temp
