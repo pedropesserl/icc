@@ -53,7 +53,7 @@ int main(void) {
 
     for (size_t i = 0; i < n+1; i++)
         printf(INTERFMT" ", FMTINTER(sistema.X[i]));
-    printf("\n\n");
+    printf("\n");
 
     printf("%1.8e\n", t_gera_SL);
     printf("%1.8e\n", t_solu_SL);

@@ -6,22 +6,47 @@
 
 \title{Relatório: Trabalho 2 -- Otimização de Desempenho}
 \author{Gabriel Lisboa Conegero -- GRR20221255\\
-        Pedro Folloni Pesserl -- GRR20220072\\
-    \textit{Departamento de Informática}\\
-    \textit{Universidade Federal do Paraná -- UFPR}\\
-    Curitiba, Brasil\\
-    \texttt{glc22@inf.ufpr.br, pfp22@inf.ufpr.br}}
+Pedro Folloni Pesserl -- GRR20220072\\
+\textit{Departamento de Informática}\\
+\textit{Universidade Federal do Paraná -- UFPR}\\
+Curitiba, Brasil\\
+\texttt{glc22@inf.ufpr.br, pfp22@inf.ufpr.br}}
 \date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-\begin{singlespace}
-
-\end{singlespace}
+    \begin{singlespace}
+        Otimização do código de ajuste de curva polinomial utilizando o método do \textbf{Mínimos quadrados} e \textbf{Eliminação de gauss}. Comparação entre duas versões utilizando a ferramenta Likwid.
+    \end{singlespace}
 \end{abstract}
 
+\section{Objetivo}
+O objetivo deste relatório é relatar o processo de otimização do código e comparar duas versões do mesmo código utilizando as medidas:
+\begin{itemize}
+    \item Tempo de execução.
+    \item Número de operações. aritiméticas em ponto flutuante (Com uso de AVX e sem).
+    \item Banda de memória.
+    \item Taxa de cache miss de dados.
+\end{itemize}
+Para os seções do código:
+\begin{enumerate}
+    \item Geração do sistema linear pelo Método dos Mínimos Quadrados.
+    \item Solução do sistema linear pelo Método da Eliminação de Gauss.
+    \item Cálculo de resíduo.
+\end{enumerate}
+
+\section{Otimizções}
+\subsection{Geração do sistema linear}
+A otimização feita foi calcular as potências de cada $x_i$ e ir somando nos somatórios, dessa forma é otimizado o acesso a cache do vetor de pontos. Comparando com $v1$ que calculava cada somatório da matriz em sequência, vemos que a taxa de cache miss é maior em $v1$, pois quando vamos calcular o próximo somatório temos que recarregar os pontos do vetor.
+\begin{figure}
+    \centering
+    \includegraphics{}
+    \caption{Taxa de cache miss ao gerar sistema linear}
+    \label{fig:gera_SL_L2_miss}
+\end{figure}
 
 
 \end{document}
+

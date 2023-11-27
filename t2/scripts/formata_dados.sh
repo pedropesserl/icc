@@ -4,8 +4,8 @@ set -e
 
 LOGS="./resultados/likwid-logs"
 DADOS="./resultados/dados"
-if [ ! -d $DADOS ]; then
-    mkdir $DADOS
+if [[ ! -d $DADOS ]]; then
+    mkdir -p $DADOS
 fi
 
 N="64 128 200 256 512 600 800 1024 2000 3000 4096 6000 7000 10000 50000 100000 1000000 10000000 100000000"
