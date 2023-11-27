@@ -52,7 +52,7 @@ for teste in $TESTES; do
             set xlabel "Número de pontos"
             set terminal png size 900,500
             set output "$GRAFS/${teste}_${FUNCOES[$j]}.png"
-            plot "$DADOS/${teste}_${FUNCOES[$j]}_v1.dat" title "${NOMES_FUNCOES[$j]} - v1" lt 7 lc 7 w lp, "$DADOS/${teste}_${FUNCOES[$j]}_v2.dat" title "${NOMES_FUNCOES[$j]} - v2" lt 7 lc 7 w lp
+            plot "$DADOS/${teste}_${FUNCOES[$j]}_v1.dat" title "${NOMES_FUNCOES[$j]} - v1" lt 7 lc 7 w lp, "$DADOS/${teste}_${FUNCOES[$j]}_v2.dat" title "${NOMES_FUNCOES[$j]} - v2" lt 7 lc 6 w lp
 EOFMarker
     done
     i=$((i+1))
