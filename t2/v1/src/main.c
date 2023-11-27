@@ -32,12 +32,7 @@ int main(void) {
     // Criando SL e inicializando
     rtime_t t_gera_SL = timestamp();
     LIKWID_MARKER_START("Gera_SL");
-    // Tabela de potências utilizada na criação do SL e cálculo dos resíduos
-    struct Inter_t **pots_xs = (struct Inter_t**)calloc(k, sizeof(struct Inter_t*));
-    if (!pots_xs)
-        MEM_ERR;
-    struct Inter_t *data = tabela_potencias_xs(n, k, xs, pots_xs);
-    struct Sistema_t sistema = cria_SL_MQ(n+1, k, pots_xs, ys);
+    struct Sistema_t sistema = cria_SL_MQ(n+1, k, xs, ys);
     LIKWID_MARKER_STOP("Gera_SL");
     t_gera_SL = timestamp() - t_gera_SL;
 
@@ -51,7 +46,7 @@ int main(void) {
     // Calculando resíduos
     rtime_t t_residuos = timestamp();
     LIKWID_MARKER_START("Calcula_Residuos");
-    struct Inter_t *residuos = calcula_residuo(&sistema, k, pots_xs, ys);
+    struct Inter_t *residuos = calcula_residuo(&sistema, k, xs, ys);
     LIKWID_MARKER_STOP("Calcula_Residuos");
     t_residuos = timestamp() - t_residuos;
 
@@ -68,8 +63,6 @@ int main(void) {
 
     // Liberando memória
     destroi_sistema(&sistema);
-    free(pots_xs);
-    free(data);
     free(residuos);
     free(xs);
     free(ys);

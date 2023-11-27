@@ -50,6 +50,29 @@ struct Inter_t div_inter(struct Inter_t a, struct Inter_t b) {
     return div;
 }
 
+struct Inter_t pow_inter(struct Inter_t a, size_t p) {
+    struct Inter_t res;
+    if (p == 0){
+        res.lo = 1.0;
+        res.up = 1.0;
+    } else {
+        double lo_p = pow(a.lo, (double)p);
+        double up_p = pow(a.up, (double)p);
+        if (p % 2 || a.lo >= 0) {
+            res.lo = lo_p;
+            res.up = up_p;
+        } else if (a.up < 0) {
+            res.lo = up_p;
+            res.up = lo_p;
+        } else {
+            res.lo = 0.0;
+            res.up = MAX2(lo_p, up_p);
+        }
+    }
+
+    return res;
+}
+
 int compara_inter(struct Inter_t a, struct Inter_t b) {
     struct Inter_t cmp = sub_inter(a, b);
     // 0 in (a - b)     => a = b

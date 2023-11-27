@@ -1,6 +1,7 @@
 // Autores: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 #ifndef INTERVALO_H_
 #define INTERVALO_H_
+#include <stdlib.h>
 
 #define MIN2(a, b)       ((a) < (b) ? (a) : (b))
 #define MIN4(a, b, c, d) (MIN2(MIN2(MIN2(a, b), c), d))
@@ -37,6 +38,9 @@ struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b);
 
 // Divide dois intervalos
 struct Inter_t div_inter(struct Inter_t a, struct Inter_t b); 
+
+// Expoencia o intervalo a pelo inteiro positivo p
+struct Inter_t pow_inter(struct Inter_t a, size_t p);
 
 // Compara dois intervalos
 //   Retorna INTER_IGUAL se a ~= b
