@@ -33,7 +33,6 @@ int main(void) {
     rtime_t t_gera_SL = timestamp();
     LIKWID_MARKER_START("Gera_SL");
     struct Sistema_t sistema = cria_SL_MQ(n+1, k, ys, xs);
-    // imprime_sistema(&sistema);
     LIKWID_MARKER_STOP("Gera_SL");
     t_gera_SL = timestamp() - t_gera_SL;
 
