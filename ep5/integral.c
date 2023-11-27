@@ -46,32 +46,24 @@ double retangulos_xy(double a, double b, int n_amostras, int n_dimensoes) {
     double h = (b - a)/n_amostras;
     double resultado = 0.0;
 
-    printf("Metodo dos Retangulos (x, y).\n");
-    printf("a = %lf, b = %lf, n = %d, h = %lg\n", a, b, n_amostras, h);
+    printf("Metodo dos Retangulos.\n");
+    printf("a = %lf, b = %lf, n = %d, h = %lg, variaveis = %d\n", a, b, n_amostras, h, n_dimensoes);
 
     double t_inicial = timestamp();
-    
-    // como a função é uma soma, podemos calcular os valores de f(x) e f(y)
-    // independentemente e multiplicar pelo número de pontos, aumentando a performance.
-    // além disso, já que a função divide a soma por 2, e dado que os valores
-    // de x e y são iguais nas suas iterações (ambos começam em a e são
-    // incrementados de h a cada iteração), podemos simplesmente calcular o
-    // valor de f(x) e não dividí-lo por 2, conseguindo o valor da integral
-    // em apenas um loop.
-    // double x = a + h/2;
-    // for (int i = 0; i < n_amostras; i++, x += h)
-    //     resultado += styblinski_tang(x);
-    // resultado *= h*h * n_amostras;
 
-    // metodo dos ratangulos ara dimensões alem de 2
+    // como a função é uma soma idêntica para todas as variáveis, e as variáveis assumem
+    // exatamente os mesmos valores nas suas iterações (todas começam em a e são incrementadas
+    // de h a cada iteração), podemos apenas calcular a integral para uma variável e
+    // multiplicar pelo número de variáveis.
+    // método dos retângulos para dimensões além de 2
     double x = a + h/2;
     for (int i = 0; i < n_amostras; i++, x += h)
         resultado += styblinski_tang(x);
 
     for (int i = 0; i < n_dimensoes-1; i++)
-        resultado *= h * n_amostras;
-
-    resultado *= h * n_dimensoes;
+        resultado *= b - a;       // multiplicando pelo tamanho do intervalo elevado ao,
+                                  // número de dimensões - 1, para conseguir o "hipervolume"
+    resultado *= h * n_dimensoes; // da figura n-dimensional que estamos calculando.
     resultado /= 2.0;
 
     double t_final = timestamp();

@@ -1,7 +1,7 @@
 CC = gcc
 PROGRAM = ajustePol
 LIKWID_HOME = /home/soft/likwid
-CFLAGS = -Iinclude -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -O3
 LFLAGS = -lm
 LOGINS = glc22-pfp22
 
@@ -10,24 +10,31 @@ _DEPS = intervalo.h sistema_linear.h ajuste_polinomial.h utils.h
 
 SDIR = src
 IDIR = include
-OBJ = $(_OBJ:%=$(SDIR)/%)
-DEPS = $(_DEPS:%=$(IDIR)/%)
 
-%.o: %c $(DEPS)
-	$(CC) $(CFLAGS) -c -o $@ $< $(LFLAGS)
+OBJ_V1 = $(_OBJ:%=v1/$(SDIR)/%)
+DEPS_V1 = $(_DEPS:%=v1/$(IDIR)/%)
+
+OBJ_V2 = $(_OBJ:%=v2/$(SDIR)/%)
+DEPS_V2 = $(_DEPS:%=v2/$(IDIR)/%)
 
 all: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native -O3
 all: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
-all: $(PROGRAM)
+all: v1
+all: v2
 
-sem_otimizacao: CFLAGS += -I$(LIKWID_HOME)/include -DLIKWID_PERFMON -mavx -march=native
-sem_otimizacao: LFLAGS += -L$(LIKWID_HOME)/lib -llikwid
-sem_otimizacao: $(PROGRAM)
+$(OBJ_V1): %.o: %.c $(DEPS_V1)
+	$(CC) $(CFLAGS) -c -o $@ $< $(LFLAGS)
 
-debug: $(PROGRAM)
+$(OBJ_V2): %.o: %.c $(DEPS_V2)
+	$(CC) $(CFLAGS) -c -o $@ $< $(LFLAGS)
 
-$(PROGRAM): $(OBJ)
-	$(CC) -o $@ $^ $(LFLAGS)
+v1: CFLAGS += -Iv1/include
+v1: $(OBJ_V1)
+	$(CC) -o v1/$(PROGRAM) $^ $(LFLAGS)
+
+v2: CFLAGS += -Iv2/include
+v2: $(OBJ_V2)
+	$(CC) -o v2/$(PROGRAM) $^ $(LFLAGS)
 
 zip: purge
 	mkdir -p ../$(LOGINS)
@@ -36,7 +43,7 @@ zip: purge
 	rm -r ../$(LOGINS)
 
 clean:
-	rm -f $(OBJ)
+	rm -f v2/$(SDIR)/*.o v1/$(SDIR)/*.o
 
-purge:
-	rm -f $(OBJ) $(PROGRAM)
+purge: clean
+	rm -f v2/$(PROGRAM) v1/$(PROGRAM) gera_entrada
