@@ -3,8 +3,8 @@
 set -e
 
 LOGS="./resultados/likwid-logs"
-if [ ! -d $LOGS ]; then
-    mkdir $LOGS
+if [[ ! -d $LOGS ]]; then
+    mkdir -p $LOGS
 fi
 
 GRUPOS="FLOPS_DP L3 L2CACHE"

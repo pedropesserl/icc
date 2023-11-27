@@ -38,7 +38,7 @@ inline struct Inter_t soma_inter(struct Inter_t a, struct Inter_t b);
 inline struct Inter_t sub_inter(struct Inter_t a, struct Inter_t b); 
 
 // Multiplica dois intervalos
-inline struct Inter_t mult_inter(struct Inter_t *a, struct Inter_t *b); 
+inline struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b); 
 
 // Divide dois intervalos
 struct Inter_t div_inter(struct Inter_t a, struct Inter_t b); 
@@ -73,11 +73,11 @@ inline struct Inter_t sub_inter(struct Inter_t a, struct Inter_t b) {
     };
 }
 
-inline struct Inter_t mult_inter(struct Inter_t *a, struct Inter_t *b) {
-    double ll = a->lo * b->lo;
-    double lu = a->lo * b->up;
-    double ul = a->up * b->lo;
-    double uu = a->up * b->up;
+inline struct Inter_t mult_inter(struct Inter_t a, struct Inter_t b) {
+    double ll = a.lo * b.lo;
+    double lu = a.lo * b.up;
+    double ul = a.up * b.lo;
+    double uu = a.up * b.up;
 
     return (struct Inter_t){
         .lo = MIN4(ll, lu, ul, uu),
