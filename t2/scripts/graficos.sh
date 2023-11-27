@@ -33,13 +33,13 @@ for i in {0..2}; do
         set ylabel "MFLOP/s"
         set xlabel "Número de pontos"
         set terminal png size 900,500
-        set output "$GRAFS/operacoes_aritmeticas_${NOMES_FUNCOES[$i]}.png"
+        set output "$GRAFS/operacoes_aritmeticas_${FUNCOES[$i]}.png"
         plot "$DADOS/operacoes_aritmeticas_dp_${FUNCOES[$i]}_v1.dat" title "DP: ${NOMES_FUNCOES[$i]} - v1" lt 7 lc 7 w lp, "$DADOS/operacoes_aritmeticas_dp_${FUNCOES[$i]}_v2.dat" title "DP: ${NOMES_FUNCOES[$i]} - v2" lt 7 lc 6 w lp, "$DADOS/operacoes_aritmeticas_avx_dp_${FUNCOES[$i]}_v1.dat" title "AVX: ${NOMES_FUNCOES[$i]} - v1" lt 7 lc 2 w lp, "$DADOS/operacoes_aritmeticas_avx_dp_${FUNCOES[$i]}_v2.dat" title "AVX: ${NOMES_FUNCOES[$i]} - v2" lt 7 lc 1 w lp
 EOFMarker
 done
 
 # Banda de Memória e Cache Miss L2
-FUNCOES="gera_sl calcula_residuos"
+FUNCOES=("gera_sl" "calcula_residuos")
 NOMES_FUNCOES=("gera\\\_sl" "calcula\\\_residuos")
 TESTES="banda_de_memoria cache_miss_l2"
 YLABELS=("Banda de memória (MB/s)" "L2 miss ratio")
