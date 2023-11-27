@@ -1,2 +1,9 @@
 resultados/likwid-logs
 resultados/dados
+
+# o vimtex gera um monte de arquivo auxiliar nada a ver
+relatorio/*.aux
+relatorio/*.fdb_latexmk
+relatorio/*.fls
+relatorio/*.log
+relatorio/*.synctex.gz

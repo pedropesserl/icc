@@ -17,36 +17,46 @@ Curitiba, Brasil\\
 \maketitle
 
 \begin{abstract}
-    \begin{singlespace}
-        Otimização do código de ajuste de curva polinomial utilizando o método do \textbf{Mínimos quadrados} e \textbf{Eliminação de gauss}. Comparação entre duas versões utilizando a ferramenta Likwid.
-    \end{singlespace}
+\begin{singlespace}
+    Este relatório documenta o processo de otimização de um programa que
+    realiza ajuste polinomial de curvas, utilizando o método dos
+    \textbf{Mínimos Quadrados} e \textbf{Eliminação de Gauss}. Também
+    apresenta a comparação entre as duas versões do programa, obtida a
+    partir da ferramenta LIKWID.
+\end{singlespace}
 \end{abstract}
 
-\section{Objetivo}
-O objetivo deste relatório é relatar o processo de otimização do código e comparar duas versões do mesmo código utilizando as medidas:
-\begin{itemize}
-    \item Tempo de execução.
-    \item Número de operações. aritiméticas em ponto flutuante (Com uso de AVX e sem).
-    \item Banda de memória.
-    \item Taxa de cache miss de dados.
-\end{itemize}
-Para os seções do código:
+\section{Metodologia da análise}
+A análise do programa de ajuste polinomial de curvas foi feita considerando
+três seções principais do código, que realizam, respectivamente:
 \begin{enumerate}
-    \item Geração do sistema linear pelo Método dos Mínimos Quadrados.
-    \item Solução do sistema linear pelo Método da Eliminação de Gauss.
-    \item Cálculo de resíduo.
+    \item Geração do sistema linear pelo Método dos Mínimos Quadrados;
+    \item Solução do sistema linear pelo Método da Eliminação de Gauss;
+    \item Cálculo de resíduos do polinômio encontrado.
 \end{enumerate}
+Tanto a seção de geração do sistema linear quanto a de cálculo dos resíduos do
+polinômio foram avaliadas com as seguintes métricas: tempo de execução, número
+de operações aritméticas de ponto flutuante, com e sem uso de SIMD, por segundo
+(FLOP/s), banda de memória e taxa de \textit{miss} na cache de dados. A seção de
+solução do sistema linear teve seu desempenho avaliado em tempo de execução e
+FLOP/s, apenas.
 
-\section{Otimizções}
+\section{Otimizações realizadas}
 \subsection{Geração do sistema linear}
-A otimização feita foi calcular as potências de cada $x_i$ e ir somando nos somatórios, dessa forma é otimizado o acesso a cache do vetor de pontos. Comparando com $v1$ que calculava cada somatório da matriz em sequência, vemos que a taxa de cache miss é maior em $v1$, pois quando vamos calcular o próximo somatório temos que recarregar os pontos do vetor.
-\begin{figure}
-    \centering
-    \includegraphics{}
-    \caption{Taxa de cache miss ao gerar sistema linear}
-    \label{fig:gera_SL_L2_miss}
-\end{figure}
+% tem muita coisa pra melhorar nesse parágrafo
+A otimização feita foi calcular as potências de cada $x_i$ e ir somando nos
+somatórios, dessa forma é otimizado o acesso a cache do vetor de pontos.
+Comparando com $v1$ que calculava cada somatório da matriz em sequência, vemos
+que a taxa de cache miss é maior em $v1$, pois quando vamos calcular o próximo
+somatório temos que recarregar os pontos do vetor.
+% \begin{figure}
+%     \centering
+%     \includegraphics{}
+%     \caption{Taxa de cache miss ao gerar sistema linear}
+%     \label{fig:gera_SL_L2_miss}
+% \end{figure}
 
+\section{Gráficos}
 
 \end{document}
 
