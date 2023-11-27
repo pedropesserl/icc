@@ -3,6 +3,8 @@
 \usepackage[brazilian]{babel}
 \usepackage{setspace}
 \usepackage{graphicx}
+\usepackage{mwe}
+\usepackage{float}
 
 \title{Relatório: Trabalho 2 -- Otimização de Desempenho}
 \author{Gabriel Lisboa Conegero -- GRR20221255\\
@@ -43,13 +45,14 @@ tempo de execução e FLOP/s, apenas.
 
 \section{Otimizações realizadas}
 \subsection{Geração do sistema linear}
+\label{subsection:gera_sl}
 Originalmente, a versão 1 do programa utilizava uma tabela de \textit{lookup}
 para armazenar as potências, de 0 a $2m$, dos pontos de entrada, onde $m$ é o
 grau do polinômio a ser ajustado. Porém, isso precisou ser modificado, porque a
 entrada agora pode conter até $10^8$ pontos, o que impossibilita o
 armazenamento das potências de todos os pontos na memória. Então, a versão 1
 agora utiliza a função \texttt{pow\_inter()} para calcular as potências dos
-x's a cada iteração.
+$x$'s a cada iteração.
 
 A otimização empregada na versão 2 foi inverter a ordem dos laços no cálculo
 das potências, de forma que iteramos sobre o vetor de pontos de entrada apenas
@@ -63,15 +66,122 @@ Como o vetor de pontos é muito maior do que a matriz do sistema linear, que é
 sempre de ordem 5, espera-se que isso diminua a taxa de \textit{miss} na
 \textit{cache} por ser necessário recarregá-lo em \textit{cache} menos vezes.
 
-% \begin{figure}
-%     \centering
-%     \includegraphics{}
-%     \caption{Taxa de \textit{cache} miss ao gerar sistema linear}
-%     \label{fig:gera_SL_L2_miss}
-% \end{figure}
+\subsection{Cálculo de resíduos}
+Pela mesma questão apresentada na subseção \ref{subsection:gera_sl}, a versão
+1 do programa foi modificada para usar a função \texttt{pow\_inter()} na
+computação das potências dos pontos de entrada, para que fossem aplicadas no
+cálculo do polinômio com os coeficientes encontrados.
+
+A versão 2 utiliza a mesma estratégia de multiplicar iterativamente cada $x_i$
+pela potência já calculada na iteração anterior, de forma a substituir a
+função custosa \texttt{pow\_inter()} por uma multiplicação a cada passo.
+
+\subsection{Outras}
+Além do que já foi mencionado, demais otimizações incluem a substituição das
+funções de manipulação de intervalos por suas contrapartes \texttt{inline}, o
+que possibilita redução na taxa de \textit{miss} na \textit{cache} de
+instruções por não ser necessário desviar o fluxo de execução para a área de
+definição das funções.
 
 \section{Gráficos}
+Os gráficos aqui apresentados foram gerados por meio da ferramenta gnuplot.
+\def\path{../resultados/graficos}
 
+\subsection{Geração do sistema linear}
+\begin{figure}[!h]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/tempo_gera_sl.png}
+        \caption{Tempo de execução.}
+        \label{gera_sl:tempo}
+    \end{minipage}\hfill
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/operacoes_aritmeticas_gera_sl.png}
+        \caption{Número de operações de ponto flutuante por segundo.}
+        \label{gera_sl:flops}
+    \end{minipage}
+\end{figure}
+
+*Comentário sobre os gráficos* 
+\vspace{90pt} % precisamos de espaço aqui se nao os próximos gráficos não renderizam
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/banda_de_memoria_gera_sl.png}
+        \caption{Banda de memória utilizada.}
+        \label{gera_sl:banda}
+    \end{minipage}\hfill
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/cache_miss_l2_gera_sl.png}
+        \caption{Taxa de \textit{miss} na \textit{cache} L2.}
+        \label{gera_sl:cache_miss}
+    \end{minipage}
+\end{figure}
+
+*Comentário sobre os gráficos*
+
+\subsection{Solução do sistema linear}
+\begin{figure}[!h]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/tempo_resolve_sl.png}
+        \caption{Tempo de execução.}
+        \label{resolve_sl:tempo}
+    \end{minipage}\hfill
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/operacoes_aritmeticas_resolve_sl.png}
+        \caption{Número de operações de ponto flutuante por segundo.}
+        \label{resolve_sl:flops}
+    \end{minipage}
+\end{figure}
+
+Percebe-se pela figura \ref{resolve_sl:tempo} que o tempo de execução da
+solução do sistema linear foi aproximadamente constante, indepentendemente
+do número de pontos da entrada. Isso é devido ao fato de que a matriz sempre
+possui ordem 5.
+
+\subsection{Cálculo de resíduos}
+\begin{figure}[!ht]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/tempo_calcula_residuos.png}
+        \caption{Tempo de execução.}
+        \label{calcula_residuos:tempo}
+    \end{minipage}\hfill
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/operacoes_aritmeticas_calcula_residuos.png}
+        \caption{Número de operações de ponto flutuante por segundo.}
+        \label{calcula_residuos:flops}
+    \end{minipage}
+\end{figure}
+
+*Comentário sobre os gráficos* 
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/banda_de_memoria_calcula_residuos.png}
+        \caption{Banda de memória utilizada.}
+        \label{calcula_residuos:banda}
+    \end{minipage}\hfill
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{\path/cache_miss_l2_calcula_residuos.png}
+        \caption{Taxa de \textit{miss} na \textit{cache} L2.}
+        \label{calcula_residuos:cache_miss}
+    \end{minipage}
+\end{figure}
+
+*Comentário sobre os gráficos*
 
 \end{document}
-
