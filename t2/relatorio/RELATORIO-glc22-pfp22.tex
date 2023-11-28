@@ -104,8 +104,10 @@ Os gráficos aqui apresentados foram gerados por meio da ferramenta gnuplot.
     \end{minipage}
 \end{figure}
 
-*Comentário sobre os gráficos* 
-\vspace{90pt} % precisamos de espaço aqui se nao os próximos gráficos não renderizam
+Na figura \ref{gera_sl:tempo} o tempo da versão 2 é aproximadamente 4 vezes menor. Devido as otimizações de uso da \textit{cache} e cálculo da potência do intervalo.
+
+Na figura \ref{gera_sl:flops} a quantidade de FLOP/s é muito maior na versão 1 devido ao uso da função \texttt{pow\_inter()}. A versão 2 tem menos FLOP/s devido ao reaproveitamento dos cálculos para exponenciação do intervalo.
+%%\vspace{90pt} % precisamos de espaço aqui se nao os próximos gráficos não renderizam
 
 \begin{figure}[H]
     \centering
@@ -123,10 +125,12 @@ Os gráficos aqui apresentados foram gerados por meio da ferramenta gnuplot.
     \end{minipage}
 \end{figure}
 
-*Comentário sobre os gráficos*
+Na figura \ref{gera_sl:banda} a banda de memória é bem maior para um número pequeno de pontos devido a otimização que mantem os dados na \textit{cache}. Porém conforme o número de pontos vai aumentando as taxas vão diminuindo e se igualando, devido ao aumento de \textit{cache miss}.
+
+Na figura \ref{gera_sl:cache_miss} o comportamento foi inesperado, devido as otimizações de uso da \textit{cache} o resultado esperado é que a versão 2 tenha um \textit{cache miss} menor que a versão 1.
 
 \subsection{Solução do sistema linear}
-\begin{figure}[!h]
+\begin{figure}[H]
     \centering
     \begin{minipage}{.5\textwidth}
         \centering
@@ -147,8 +151,10 @@ solução do sistema linear foi aproximadamente constante, indepentendemente
 do número de pontos da entrada. Isso é devido ao fato de que a matriz sempre
 possui ordem 5.
 
+A figura \ref{resolve_sl:flops} apresenta uma constância independente do número de pontos e da versão, isso pois a matriz sempre possui ordem 5 e os cálculos não utilizam a função \texttt{pow\_inter()}.
+
 \subsection{Cálculo de resíduos}
-\begin{figure}[!ht]
+\begin{figure}[H]
     \centering
     \begin{minipage}{.5\textwidth}
         \centering
@@ -164,7 +170,9 @@ possui ordem 5.
     \end{minipage}
 \end{figure}
 
-*Comentário sobre os gráficos* 
+A figura \ref{calcula_residuos:tempo} apresenta que o tempo de calcular os residuos é aproximadamente 4 vezes maior na versão 1 do que na versão 2, devido à otimização do uso da função \texttt{pow\_inter()}.
+
+O número de FLOP/s é muito menor na versão 2, como pode ser visto na figura \ref{calcula_residuos:flops}. Isso pois a versão 2 otimiza o código e reaproeita a potência anterior de $x_i$ para calcular a nova potência, ao invés de utilizar a função \texttt{pow\_inter()}, que é custosa.
 
 \begin{figure}[H]
     \centering
@@ -182,6 +190,6 @@ possui ordem 5.
     \end{minipage}
 \end{figure}
 
-*Comentário sobre os gráficos*
+Em ambas as figuras \ref{calcula_residuos:cache_miss} e \ref{calcula_residuos:cache_miss} os valores são parecidos nas duas versões, isso pois a otimização no cálculo de resíduos foi na parte de operações aritméticas.
 
 \end{document}
