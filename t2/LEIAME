@@ -1,5 +1,13 @@
 Nomes: Gabriel Lisboa Conegero (GRR20221255) e Pedro Folloni Pesserl (GRR20220072)
 
+Modo de uso:
+Compilar o programa:
+    $ make
+
+Gerar logs com likwid, formatar dados e gerar gráficos:
+    $ chmod u+x script.sh
+    $ ./script.sh
+
 # Otimizações
 ## Gerando SL
 A otimização feita foi calcular as potências de cada x_i e ir somando nos somatórios

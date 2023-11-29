@@ -38,7 +38,7 @@ v2: $(OBJ_V2)
 
 zip: purge
 	mkdir -p ../$(LOGINS)
-	cp -r -t ../$(LOGINS) $(SDIR) $(IDIR) LEIAME makefile script.sh
+	cp -r -t ../$(LOGINS) gera_entrada.c LEIAME makefile RELATORIO-glc22-pfp22.pdf scripts/ script.sh v1/ v2/
 	tar -czvf $(LOGINS).tar.gz ../$(LOGINS)
 	rm -r ../$(LOGINS)
 
