@@ -5,7 +5,7 @@
 \usepackage{graphicx}
 \usepackage{mwe}
 \usepackage{float}
-\usepackage{chngctr}
+\usepackage{chngcntr}
 
 \title{Relatório: Trabalho 2 -- Otimização de Desempenho}
 \author{Gabriel Lisboa Conegero -- GRR20221255\\
@@ -93,7 +93,7 @@ Os gráficos aqui apresentados foram gerados por meio da ferramenta gnuplot.
 
 \subsection{Geração do sistema linear}
 \label{subsecao:gera_sl}
-\begin{figure}[!h]
+\begin{figure}[H]
     \centering
     \begin{minipage}{.5\textwidth}
         \centering
@@ -101,7 +101,6 @@ Os gráficos aqui apresentados foram gerados por meio da ferramenta gnuplot.
         \caption{Tempo de execução.}
         \label{gera_sl:tempo}
     \end{minipage}\hfill
-    
     \begin{minipage}{.5\textwidth}
         \centering
         \includegraphics[width=\linewidth]{\path/operacoes_aritmeticas_gera_sl.png}
