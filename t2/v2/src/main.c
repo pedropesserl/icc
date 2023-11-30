@@ -16,23 +16,21 @@ int main(void) {
     // Inicializando pontos da curva
     size_t n, k;
     scanf("%ld %ld", &n, &k);
-    struct Inter_t *xs = (struct Inter_t*)calloc(k, sizeof(struct Inter_t));
-    if (!xs)
+    struct Ponto_t *pts = (struct Ponto_t*)calloc(k, sizeof(struct Ponto_t));
+    if (!pts)
         MEM_ERR;
-    struct Inter_t *ys = (struct Inter_t*)calloc(k, sizeof(struct Inter_t));
-    if (!ys)
-        MEM_ERR;
+
     for (size_t i = 0; i < k; i++) {
         double inx, iny;
         scanf("%lf %lf", &inx, &iny);
-        xs[i].lo = inx; xs[i].up = M(inx);
-        ys[i].lo = iny; ys[i].up = M(iny);
+        pts[i].x.lo = inx; pts[i].x.up = M(inx);
+        pts[i].y.lo = iny; pts[i].y.up = M(iny);
     }
 
     // Criando SL e inicializando
     rtime_t t_gera_SL = timestamp();
     LIKWID_MARKER_START("Gera_SL");
-    struct Sistema_t sistema = cria_SL_MQ(n+1, k, ys, xs);
+    struct Sistema_t sistema = cria_SL_MQ(n+1, k, pts);
     LIKWID_MARKER_STOP("Gera_SL");
     t_gera_SL = timestamp() - t_gera_SL;
 
@@ -46,7 +44,7 @@ int main(void) {
     // Calculando resíduos
     rtime_t t_residuos = timestamp();
     LIKWID_MARKER_START("Calcula_Residuos");
-    struct Inter_t *residuos = calcula_residuo(&sistema, k, xs, ys);
+    struct Inter_t *residuos = calcula_residuo(&sistema, k, pts);
     LIKWID_MARKER_STOP("Calcula_Residuos");
     t_residuos = timestamp() - t_residuos;
 
@@ -61,8 +59,7 @@ int main(void) {
     // Liberando memória
     destroi_sistema(&sistema);
     free(residuos);
-    free(xs);
-    free(ys);
+    free(pts);
 
     LIKWID_MARKER_CLOSE;
     return 0;

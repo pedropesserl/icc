@@ -13,7 +13,7 @@ Gerar logs com likwid, formatar dados e gerar gráficos:
 A otimização feita foi calcular as potências de cada x_i e ir somando nos somatórios
 dessa forma não precisa ficar voltando a carregar o vetor de pontos para cada somatório.
 
-## Vetor de ponto ao invés de dois vetore
+## Vetor de ponto ao invés de dois vetores
 A preferência foi escolher um vetor de pontos pois sempre que usamos um valor de x_i
 vamos usar em sequência o valor de y_i para somar os somatorios dos termos independentes.
 
