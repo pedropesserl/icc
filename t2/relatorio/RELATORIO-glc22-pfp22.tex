@@ -78,11 +78,19 @@ pela potência já calculada na iteração anterior, de forma a substituir a
 função custosa \texttt{pow\_inter()} por uma multiplicação a cada passo.
 
 \subsection{Outras}
-Além do que já foi mencionado, demais otimizações incluem a substituição das
-funções de manipulação de intervalos por suas contrapartes \texttt{inline}, o
-que possibilita redução na taxa de \textit{miss} na \textit{cache} de
-instruções por não ser necessário desviar o fluxo de execução para a área de
-definição das funções.
+Além do que já foi mencionado, demais otimizações incluem a criação de uma
+estrutura \texttt{struct Ponto\_t}, para que os pontos de entrada fossem
+armazenados em um vetor de estruturas em vez de em dois vetores separados.
+Essa decisão foi tomada porque sempre que o valor $x$ de um ponto é acessado
+no programa, o valor de $y$ correspondente também é usado. Dessa forma, quando
+um ponto é usado em algum cálculo, ambas as suas coordenadas já estão carregadas
+em \textit{cache}. Essa otimização tem impacto tanto na função que gera o
+sistema linear quanto na do cálculo dos resíduos.
+
+Além disso, também foi feita a substituição das funções de manipulação de
+intervalos por suas contrapartes \texttt{inline}, o que possibilita redução na
+taxa de \textit{miss} na \textit{cache} de instruções por não ser necessário
+desviar o fluxo de execução para a área de definição das funções.
 
 \section{Gráficos}
 Os gráficos aqui apresentados foram gerados por meio da ferramenta gnuplot.
@@ -136,7 +144,7 @@ do intervalo.
 
 Como relatado em \ref{gera_sl:banda}, a banda de memória utilizada é cerca de uma
 uma ordem de magnitude maior na versão 2, para um número pequeno de pontos. A origem
-desse aumento é a otimização quem mantém os dados na \textit{cache}. Contudo,
+desse aumento são as otimizações que mantêm os dados na \textit{cache}. Contudo,
 conforme o número de pontos aumenta, as taxas vão diminuindo e se igualando, devido
 ao aumento de \textit{cache miss}.
 
@@ -186,10 +194,10 @@ Essa relativa constância se repetiu na análise de FLOP/s, como apresentado na 
     \end{minipage}
 \end{figure}
 
-Como na subseção \ref{subsecao:gera_sl}, é possível perceber pela figura
+Como na função geradora do sistema linear, é possível perceber pela figura
 \ref{calcula_residuos:tempo} que o tempo de execução da função que calcula
 resíduos foi reduzido em cerca de 4 vezes. Isso se deve à otimização do uso
-da função \texttt{pow\_inter()}.
+da função \texttt{pow\_inter()} e do uso de dados na \textit{cache}.
 
 O número de FLOP/s foi reduzido pela metade na função de cálculo de resíduos,
 como apresentado na figura \ref{calcula_residuos:flops}. Isso porque a versão
@@ -213,10 +221,14 @@ para calcular a potência $x_i^{k+1}$ na próxima, em lugar de utilizar a funç�
     \end{minipage}
 \end{figure}
 
-Em ambas as figuras \ref{calcula_residuos:cache_miss} e
-\ref{calcula_residuos:cache_miss} os valores são parecidos nas duas versões,
-pois a otimização no cálculo de resíduos foi na parte de operações
-aritméticas.
+Na figura \ref{calcula_residuos:banda}, pode-se perceber que a função usa,
+aproximadamente, o dobro de banda de memória na segunda versão quando comparada
+com a primeira, por conta das otimizações de cache e CPU mencionadas.
+
+Porém, novamente, constatamos que a taxa de \textit{cache miss} foi aproximadamente
+igual ou maior na versão 2 do que na versão 1, como descrito na figura
+\ref{calcula_residuos:cache_miss}, que é um resultado inesperado.
+
 \section{Arquitetura do processador utilizado}
     Saída do comando \texttt{likwid-topology -g -c}.
     \begin{verbatim}
